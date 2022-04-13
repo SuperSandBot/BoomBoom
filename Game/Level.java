@@ -3,7 +3,6 @@ package Game;
 import java.util.ArrayList;
 
 import Game.GameObject.*;
-
 import javafx.scene.canvas.GraphicsContext;
 
 public class Level {
@@ -66,6 +65,7 @@ public class Level {
     {
 
         blocks = new Block[map.Col][map.Row];
+        int[][] blockMap = map.blockMap;
         int x = 0;
         int y = 0;
 
@@ -73,11 +73,15 @@ public class Level {
         {
             for(int j = 0; j < blocks[0].length; j++)
             {
+                // xac dinh vi tri
                 blocks[i][j] = new Block();
                 blocks[i][j].setWorldX((worldWidth - map.getScreenX())/2 + x + 32 );
                 blocks[i][j].setWorldY((worldHight - map.getScreenY())/2 + y + 32 );
                 blocks[i][j].setScreenX(map.getScreenX() + x);
                 blocks[i][j].setScreenY(map.getScreenY() + y);
+
+                // xac dinh the loai
+                blocks[i][j].setBType(blockMap[i][j]);
 
                 y += 64;
             }

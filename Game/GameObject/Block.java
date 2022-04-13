@@ -7,48 +7,16 @@ public class Block extends Object {
 
     public static enum blockTypes
     {
-        DIRTBLOCK00(0),
-        DIRTBLOCK01(1),
-        GRASSBLOCK(2),
-        STONEBLOCK(3);
-
-        private int blockID;
-        private Image blockImage;
-        private blockTypes(int blockID)
-        {
-            this.blockID = blockID;
-
-            switch (blockID)
-            {
-                case 0:
-                    blockImage = new Image(getClass().getResourceAsStream("Asset/Block/DirtBlock00.png"));
-                    break;
-                case 1:
-                    blockImage = new Image(getClass().getResourceAsStream("Asset/Block/DirtBlock01.png"));
-                    break;
-                case 2:
-                    blockImage = new Image(getClass().getResourceAsStream("Asset/Block/grassblock.png"));
-                    break;
-                case 3:
-                    blockImage = new Image(getClass().getResourceAsStream("Asset/Block/stone.png"));
-                    break;
-                default:
-                    blockImage = null;
-            }
-        }
-        public int getID()
-        {
-            return this.blockID;
-        }
-        public Image getImage()
-        {
-            return this.blockImage;
-        }
+        NONE,
+        DIRTBLOCK00,
+        DIRTBLOCK01,
+        GRASSBLOCK,
+        STONEBLOCK;
     }
 
-    Image image;
+    Image blockImage;
 
-    public blockTypes bTypes;
+    public blockTypes bType;
     public Block top, down, left, right;
 
     public Block()
@@ -61,11 +29,53 @@ public class Block extends Object {
 
     }
 
+    public void setBType(int blockID)
+    {
+        switch(blockID)
+        {
+            case 0:
+                this.bType = blockTypes.NONE;
+                break;
+            case 1:
+                this.bType = blockTypes.DIRTBLOCK00;
+                break;
+            case 2:
+                this.bType = blockTypes.DIRTBLOCK01;
+                break;
+            case 3:
+                this.bType = blockTypes.GRASSBLOCK;
+                break;
+            case 4:
+                this.bType = blockTypes.STONEBLOCK;
+                break;  
+        }
+
+        switch (blockID)
+            {
+                case 1:
+                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/DirtBlock00.png"));
+                    break;
+                case 2:
+                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/DirtBlock01.png"));
+                    break;
+                case 3:
+                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/grassblock.png"));
+                    break;
+                case 4:
+                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/stone.png"));
+                    break;
+                default:
+                    case 0:
+                    blockImage = null;
+                    break; 
+            }
+    }
+
     public void draw(GraphicsContext gp)
     {
-        if(image != null)
+        if(blockImage != null)
         {
-            gp.drawImage(image, (getScreenX() - image.getWidth())/2, (getScreenY() - image.getHeight() - 32)/2 );
+            gp.drawImage(blockImage, getScreenY(), getScreenX()- 32 );
         }
        
     }

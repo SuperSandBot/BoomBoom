@@ -38,8 +38,8 @@ public class GameHandler extends Pane implements Runnable {
 
         //set up level
         Map map = new Map();
-        map.setScreenX(0);
-        map.setScreenY(0);
+        map.setScreenX(64);
+        map.setScreenY(64);
         level = new Level(this,map, worldHight, worldWidth);
         level.setupLevel();
 
