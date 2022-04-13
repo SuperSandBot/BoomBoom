@@ -1,12 +1,11 @@
-package SeverHandler;
-
+package Game.SeverHandler;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import SeverHandler.Packet.packetTypes;
+import Game.SeverHandler.Packet.packetTypes;
 
 public class sever implements Runnable{
     

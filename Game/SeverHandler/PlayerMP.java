@@ -1,7 +1,8 @@
-package SeverHandler;
+package Game.SeverHandler;
+
 import java.net.InetAddress;
 
-import GameMain.Player;
+import Game.GameObject.Player;
 
 public class PlayerMP extends Player{
 

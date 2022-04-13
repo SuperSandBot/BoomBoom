@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import Game.GameObject.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 
-public class GameHandler implements Runnable {
+public class GameHandler extends Pane implements Runnable {
 
-    final int TitleScale = 64;  //48 x 48
+    final int TitleScale = 64;  //64x64
 
-    final int maxScreenCol = 14;
-    final int maxScreenRow = 11;
+    final int maxScreenCol = 16;
+    final int maxScreenRow = 12;
     final int screenWidth = TitleScale * maxScreenCol; // 860 pixel 
     final int screenHight = TitleScale * maxScreenRow; // 640 pixel
 
@@ -25,21 +26,38 @@ public class GameHandler implements Runnable {
     boolean running = false;
     GraphicsContext gp;
     Canvas canvas;
-    ArrayList<Player> playerlist;
+    ArrayList<Player> playerlist = new ArrayList<Player>();
 
 
     public GameHandler()
     {
-        //set up level
-        level = new Level(this, worldHight, worldWidth);
-        Map map = new Map();
-        level.setupLevel(map);
-
         //set up canvas side
+        this.setPrefSize(screenWidth, screenHight);
         canvas = new Canvas(screenWidth,screenHight);
+        this.getChildren().add(canvas);
 
-        // else 
-        Player player = new Player(worldWidth/2, worldHight/2, screenWidth/2, screenHight/2);
+        //set up level
+        Map map = new Map();
+        map.setScreenX(0);
+        map.setScreenY(0);
+        level = new Level(this,map, worldHight, worldWidth);
+        level.setupLevel();
+
+        //add player
+        Player player = new Player();
+        player.setWorldX(worldWidth/2);
+        player.setWorldY(worldHight/2);
+        player.setScreenX(screenWidth/2);
+        player.setScreenY(screenHight/2);
+        playerlist.add(player);
+
+        int i = 0;
+        for (Player p : playerlist) {
+            
+            p.setWorldX(level.SpawnPoint.get(i).getWorldX());
+            p.setWorldY(level.SpawnPoint.get(i).getWorldY());
+            i++;
+        }
 
         //set up update and draw and thread need to be last
         gp = canvas.getGraphicsContext2D();
@@ -71,31 +89,19 @@ public class GameHandler implements Runnable {
         gp.clearRect(0, 0,screenWidth, screenHight);
 
         level.draw(gp);
-        //player.draw(gp);
+
+        for (Player player : playerlist) {
+            player.draw(gp);
+        }
+      
     }
+
     private void Update() {
         
-        level.update(gp);
-        /*player.update();
-        gamePanel.update();
+        level.update();
 
-        gamePanel.screenX = gamePanel.worldX - player.worldX + player.screenX;
-        gamePanel.screenY = gamePanel.worldY - player.worldY + player.screenY;
-        
-        int x = 0;
-        int y = 0;
-
-        for(int i = 0; i < blocks.length; i++)
-        {
-            for(int j = 0; j < blocks[0].length; j++)
-            {
-                blocks[i][j].setScreenX(gamePanel.screenX + x );
-                blocks[i][j].setScreenY(gamePanel.screenY + y );
-                y += 64;
-            }
-            x += 64;
-            y = 0;
-        }*/
-
+        for (Player player : playerlist) {
+            player.update();
+        }
     }
 }

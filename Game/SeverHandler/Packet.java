@@ -1,4 +1,4 @@
-package SeverHandler;
+package Game.SeverHandler;
 
 public abstract class Packet {
     public static enum packetTypes

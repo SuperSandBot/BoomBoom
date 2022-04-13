@@ -1,4 +1,4 @@
-package SeverHandler;
+package Game.SeverHandler;
 
 import java.io.IOException;
 import java.net.ConnectException;

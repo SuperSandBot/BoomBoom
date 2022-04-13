@@ -1,5 +1,6 @@
 package Game.GameObject;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Map extends Object {
@@ -10,13 +11,17 @@ public class Map extends Object {
 
     public Map()
     {
-
+        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/lanepanel.png"));
     }
     
     public Map(int worldX, int worldY, int screenX, int screenY) {
         super(worldX, worldY, screenX, screenY);
-        //TODO Auto-generated constructor stub
 
-        image = new Image(getClass().getResourceAsStream("Asset/lanepanel.png"));
+        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/lanepanel.png"));
+    }
+
+    public void draw(GraphicsContext gp) 
+    {
+        gp.drawImage(image,getScreenX(),getScreenY());
     }
 }

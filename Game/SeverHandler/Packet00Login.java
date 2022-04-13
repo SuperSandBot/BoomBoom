@@ -1,4 +1,4 @@
-package SeverHandler;
+package Game.SeverHandler;
 
 public class Packet00Login extends Packet {
 
