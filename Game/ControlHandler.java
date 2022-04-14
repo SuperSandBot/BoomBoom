@@ -1,34 +1,40 @@
 package Game;
 
 import Game.GameObject.Player;
-import javafx.scene.Scene;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 
-public class ControlHandler {
+public class ControlHandler implements EventHandler<KeyEvent> {
 
     public Player player;
 
+    @Override
+    public void handle(KeyEvent event) {
 
-    public ControlHandler(Scene scene)
-    {
-        scene.setOnKeyPressed(event ->
+        switch(event.getCode())
         {
-            switch(event.getCode())
-            {
-                case UP:
-                    break;
+            case UP:
+                player.setWorldX(player.getWorldX());
+                player.setWorldY(player.getWorldY() - player.speed);
+                break;
 
-                case DOWN:
-                    break; 
-                    
-                case LEFT:
-                    break;
+            case DOWN:
+                player.setWorldX(player.getWorldX());
+                player.setWorldY(player.getWorldY() + player.speed);
+                break; 
+                
+            case LEFT:
+                player.setWorldX(player.getWorldX() - player.speed);
+                player.setWorldY(player.getWorldY());
+                break;
 
-                case RIGHT:
-                    break;
+            case RIGHT:
+                player.setWorldX(player.getWorldX() + player.speed);
+                player.setWorldY(player.getWorldY());
+                break;
 
-                default:
-                    break;
-            }
-        });
+            default:
+                break;
+        } 
     }
 }

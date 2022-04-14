@@ -75,7 +75,7 @@ public class Block extends Object {
     {
         if(blockImage != null)
         {
-            gp.drawImage(blockImage, getScreenY(), getScreenX()- 32 );
+            gp.drawImage(blockImage, getScreenX(), getScreenY()- 32 );
         }
        
     }

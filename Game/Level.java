@@ -3,9 +3,10 @@ package Game;
 import java.util.ArrayList;
 
 import Game.GameObject.*;
+import Game.GameObject.Object;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Level {
+public class Level extends Object{
     
     public int worldWidth;
     public int worldHight;
@@ -18,6 +19,7 @@ public class Level {
 
     public Level(GameHandler gh,Map map , int worldHight, int worldWidth)
     {
+        super();
         this.gh = gh;
         this.map = map;
         this.worldHight = worldHight;
@@ -39,12 +41,11 @@ public class Level {
 
     public void update()
     {
-        /*
-        gamePanel.update();
-
-        gamePanel.screenX = gamePanel.worldX - player.worldX + player.screenX;
-        gamePanel.screenY = gamePanel.worldY - player.worldY + player.screenY;
+        //xác định vị trí máp trên màng hình
+        map.setScreenX(this.getScreenX() +64);
+        map.setScreenY(this.getScreenY() +64);
         
+        // xác định vị trí block trên màng hình
         int x = 0;
         int y = 0;
 
@@ -52,33 +53,31 @@ public class Level {
         {
             for(int j = 0; j < blocks[0].length; j++)
             {
-                blocks[i][j].setScreenX(gamePanel.screenX + x );
-                blocks[i][j].setScreenY(gamePanel.screenY + y );
+                blocks[i][j].setScreenX(this.getScreenX() + x + 64);
+                blocks[i][j].setScreenY(this.getScreenY() + y + 64);
                 y += 64;
             }
             x += 64;
             y = 0;
-        }*/
+        }
     }
 
     public void setupLevel()
     {
 
-        blocks = new Block[map.Col][map.Row];
+        blocks = new Block[map.Row][map.Col];
         int[][] blockMap = map.blockMap;
         int x = 0;
         int y = 0;
-
+        
         for(int i = 0; i < blocks.length; i++)
         {
             for(int j = 0; j < blocks[0].length; j++)
             {
                 // xac dinh vi tri
                 blocks[i][j] = new Block();
-                blocks[i][j].setWorldX((worldWidth - map.getScreenX())/2 + x + 32 );
-                blocks[i][j].setWorldY((worldHight - map.getScreenY())/2 + y + 32 );
-                blocks[i][j].setScreenX(map.getScreenX() + x);
-                blocks[i][j].setScreenY(map.getScreenY() + y);
+                blocks[i][j].setWorldX(this.getWorldX() + x * i + 96 );
+                blocks[i][j].setWorldY(this.getWorldY() + y * j + 96 );
 
                 // xac dinh the loai
                 blocks[i][j].setBType(blockMap[i][j]);
@@ -101,9 +100,9 @@ public class Level {
         }  
 
         SpawnPoint.add(blocks[0][0]);
-        SpawnPoint.add(blocks[0][map.Row -1]);
-        SpawnPoint.add(blocks[map.Col - 1][0]);
-        SpawnPoint.add(blocks[map.Col - 1][map.Row -1 ]);
+        SpawnPoint.add(blocks[0][map.Col -1]);
+        SpawnPoint.add(blocks[map.Row - 1][0]);
+        SpawnPoint.add(blocks[map.Row - 1][map.Col -1 ]);
 
     }
 

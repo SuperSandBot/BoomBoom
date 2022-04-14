@@ -2,7 +2,6 @@ package Game;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GameMain extends Application {
@@ -19,13 +18,11 @@ public class GameMain extends Application {
 
         gameHandler = new GameHandler();
 
-        scene = new Scene(gameHandler,Color.BLACK); 
-
         primaryStage.setTitle("BoomBoom");
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHight);
         primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(gameHandler.scene);
         primaryStage.show();
     }
 

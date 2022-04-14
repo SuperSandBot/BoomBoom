@@ -7,6 +7,8 @@ import javafx.scene.image.Image;
 
 public class Player extends Object
 {
+    public int speed = 3;
+
     ArrayList<Image> playerwalk = new ArrayList<Image>();;
 
     public Player()
@@ -25,5 +27,4 @@ public class Player extends Object
     {
 
     }
-
 }

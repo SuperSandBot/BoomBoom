@@ -12,8 +12,8 @@ public class Map extends Object {
 
     public int[][] blockMap;
     public Image image;
-    public int Col = 6;
     public int Row = 8;
+    public int Col = 6;
 
     public Map()
     {
@@ -30,19 +30,19 @@ public class Map extends Object {
 
     private void LoadMap(String file)
     {
-        blockMap = new int[Col][Row];
+        blockMap = new int[Row][Col];
 
         try {
             InputStream in = getClass().getResourceAsStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
            
 
-            for(int i = 0; i < Col; i++)
+            for(int i = 0; i < Row; i++)
             {
                 String line = br.readLine();
                 String nums[] = line.split(" ");
 
-                for(int j = 0; j < Row; j++)
+                for(int j = 0; j < Col; j++)
                 {
                     int num = Integer.parseInt(nums[j]);
                     blockMap[i][j] = num;
