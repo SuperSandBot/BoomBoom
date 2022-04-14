@@ -2,19 +2,19 @@ package Game.GameObject;
 
 import java.util.ArrayList;
 
+import Game.BoxCollider;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Player extends Object
 {
     public int speed = 3;
-
+    public BoxCollider boxCollider;
     ArrayList<Image> playerwalk = new ArrayList<Image>();;
 
     public Player()
     {
         super();
-
         playerwalk.add(new Image(getClass().getResourceAsStream("/Game/Asset/girlwalk_01.png")));
     }
 

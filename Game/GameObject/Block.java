@@ -1,5 +1,6 @@
 package Game.GameObject;
 
+import Game.BoxCollider;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -17,6 +18,7 @@ public class Block extends Object {
     Image blockImage;
 
     public blockTypes bType;
+    public BoxCollider boxCollider;
     public Block top, down, left, right;
 
     public Block()
@@ -26,7 +28,6 @@ public class Block extends Object {
 
     public Block(int worldX, int worldY, int screenX, int screenY) {
         super(worldX, worldY, screenX, screenY);
-
     }
 
     public void setBType(int blockID)

@@ -81,6 +81,8 @@ public class Level extends Object{
 
                 // xac dinh the loai
                 blocks[i][j].setBType(blockMap[i][j]);
+                //setup box collider
+                blocks[i][j].boxCollider = new BoxCollider( blocks[i][j].getWorldX(),  blocks[i][j].getWorldY() - 32, 64, 64);
 
                 y += 64;
             }
