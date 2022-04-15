@@ -55,6 +55,7 @@ public class Level extends Object{
             {
                 blocks[i][j].setScreenX(this.getScreenX() + x + 64);
                 blocks[i][j].setScreenY(this.getScreenY() + y + 64);
+                blocks[i][j].update();
                 y += 64;
             }
             x += 64;
@@ -76,13 +77,11 @@ public class Level extends Object{
             {
                 // xac dinh vi tri
                 blocks[i][j] = new Block();
-                blocks[i][j].setWorldX(this.getWorldX() + x * i + 96 );
-                blocks[i][j].setWorldY(this.getWorldY() + y * j + 96 );
+                blocks[i][j].setWorldX(this.getWorldX() + x + 96);
+                blocks[i][j].setWorldY(this.getWorldY() + y + 96);
 
                 // xac dinh the loai
                 blocks[i][j].setBType(blockMap[i][j]);
-                //setup box collider
-                blocks[i][j].boxCollider = new BoxCollider( blocks[i][j].getWorldX(),  blocks[i][j].getWorldY() - 32, 64, 64);
 
                 y += 64;
             }

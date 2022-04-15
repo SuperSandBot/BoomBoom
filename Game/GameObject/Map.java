@@ -12,6 +12,7 @@ public class Map extends Object {
 
     public int[][] blockMap;
     public Image image;
+    public int Width, Hight;
     public int Row = 8;
     public int Col = 6;
 
@@ -19,6 +20,8 @@ public class Map extends Object {
     {
         image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/battleground02.png"));
         LoadMap("/Game/Asset/Map/battleground02.txt");
+        this.Width = (int) image.getWidth();
+        this.Hight = (int) image.getHeight();
 
     }
     

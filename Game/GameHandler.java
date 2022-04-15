@@ -31,7 +31,6 @@ public class GameHandler extends Parent implements Runnable {
     Canvas canvas;
     ArrayList<Player> playerlist = new ArrayList<Player>();
     ControlHandler controlHandler;
-    CollisionHandler collisionHandler;
 
 
     public GameHandler()
@@ -54,9 +53,10 @@ public class GameHandler extends Parent implements Runnable {
         Player player = new Player();
         player.setWorldX(level.SpawnPoint.get(0).getWorldX());
         player.setWorldY(level.SpawnPoint.get(0).getWorldY());
+        player.Pos = level.SpawnPoint.get(0);
         player.setScreenX(screenWidth/2);
         player.setScreenY(screenHight/2);
-        player.boxCollider = new BoxCollider(player.getWorldX(), player.getWorldY(), 32, 32);
+
         playerlist.add(player);
 
         //setup controler
@@ -64,8 +64,7 @@ public class GameHandler extends Parent implements Runnable {
         controlHandler.player = playerlist.get(0);
         scene.setOnKeyPressed(controlHandler);
 
-        //setup collision handler
-        collisionHandler = new CollisionHandler();
+        controlHandler.level = level;
 
         //set up update and draw and thread need to be last
         gp = canvas.getGraphicsContext2D();
@@ -100,7 +99,6 @@ public class GameHandler extends Parent implements Runnable {
     private void Draw() {
 
         gp.clearRect(0, 0,screenWidth, screenHight);
-
         level.draw(gp);
 
         for (Player player : playerlist) {
@@ -112,7 +110,7 @@ public class GameHandler extends Parent implements Runnable {
     private void Update() {
         
         level.update();
-        collisionHandler.update();
+        controlHandler.update();
         for (Player player : playerlist) {
             player.update();
         }
