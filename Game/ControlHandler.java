@@ -65,6 +65,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 break;  
 
             case RIGHT:
+            
                 if(isMoving)
                 {
                     return;
@@ -78,6 +79,10 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                     }
                 }
                 break;
+            case SPACE:
+
+                player.playerPlantBoom();
+                break;
 
             default:
                 break;
@@ -90,19 +95,19 @@ public class ControlHandler implements EventHandler<KeyEvent> {
         {
             player.setWorldX(player.getWorldX() + moveX);
             player.setWorldY(player.getWorldY() + moveY);
-            if(player.getWorldX() == player.Pos.getWorldX() && player.getWorldY() == player.Pos.getWorldY())
+            if(player.getWorldX() == targetPos.getWorldX() && player.getWorldY() == targetPos.getWorldY())
             {
                 player.Pos = targetPos;
                 isMoving = false;
             }
         }
-        System.out.println(player.getWorldX()+ "/" + player.getWorldY());
+        //System.out.println(player.getWorldX()+ "/" + player.getWorldY());
     }
 
     public void Move()
     {
-        int dx = player.Pos.getWorldX() - player.getWorldX();
-        int dy = player.Pos.getWorldY() - player.getWorldY();
+        int dx = targetPos.getWorldX() - player.Pos.getWorldX();
+        int dy = targetPos.getWorldY() - player.Pos.getWorldY();
         moveX = dx / player.speed;
         moveY = dy / player.speed;
         isMoving = true;  

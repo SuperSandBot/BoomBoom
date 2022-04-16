@@ -2,15 +2,18 @@ package Game.GameObject;
 
 import java.util.ArrayList;
 
+import Game.Level;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Player extends Object
 {
-    public int speed = 4;
+    public int power = 1;
+    public int speed = 8;
     public Block Pos;
-    
-    ArrayList<Image> playerwalk = new ArrayList<Image>();;
+    public Level level;
+
+    ArrayList<Image> playerwalk = new ArrayList<Image>();
 
     public Player()
     {
@@ -26,5 +29,17 @@ public class Player extends Object
     public void update() 
     {
 
+    }
+
+    public void playerPlantBoom()
+    {
+        if(level.checkBoomPos(Pos))
+        {
+            return;
+        }
+        else
+        {
+            level.playerPlantBoom(this,Pos);
+        }
     }
 }

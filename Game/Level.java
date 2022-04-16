@@ -14,7 +14,8 @@ public class Level extends Object{
     GameHandler gh;
     Map map;
     Block[][] blocks;
-
+    ArrayList<Player> playerlist = new ArrayList<Player>();
+    ArrayList<Boom> Booms = new ArrayList<Boom>();
     ArrayList<Block> SpawnPoint = new ArrayList<Block>();
 
     public Level(GameHandler gh,Map map , int worldHight, int worldWidth)
@@ -24,11 +25,16 @@ public class Level extends Object{
         this.map = map;
         this.worldHight = worldHight;
         this.worldWidth = worldWidth;
+
     }
 
     public void draw(GraphicsContext gp)
     {
         map.draw(gp);
+
+        for (Player player : playerlist) {
+            player.draw(gp);
+        }
 
         for(int i = 0; i < blocks.length; i++)
         {
@@ -37,10 +43,19 @@ public class Level extends Object{
                 blocks[i][j].draw(gp);
             }
         } 
+
+        for (Boom boom : Booms) {
+            boom.draw(gp);
+        }
+
     }
 
     public void update()
-    {
+    {   
+        for (Player player : playerlist) {
+            player.update();
+        }
+
         //xác định vị trí máp trên màng hình
         map.setScreenX(this.getScreenX() +64);
         map.setScreenY(this.getScreenY() +64);
@@ -61,6 +76,30 @@ public class Level extends Object{
             x += 64;
             y = 0;
         }
+
+        for (Boom boom : Booms) {
+            boom.setScreenX(boom.block.getScreenX());
+            boom.setScreenY(boom.block.getScreenY());
+        }
+
+        this.setScreenX(this.getWorldX() - playerlist.get(0).getWorldX() + playerlist.get(0).getScreenX());
+        this.setScreenY(this.getWorldY() - playerlist.get(0).getWorldY() + playerlist.get(0).getScreenY());
+    }
+
+    public void playerPlantBoom(Player player,Block block)
+    {
+        Boom boom = new Boom(block.getWorldX(), block.getWorldY(), block.getScreenX(), block.getScreenY());
+        boom.block = block;
+        boom.power = player.power;
+        Booms.add(boom);
+    }
+
+    public boolean checkBoomPos(Block block)
+    {
+        for (Boom boom : Booms) {
+            if(boom.block == block) return true;
+        }
+        return false;
     }
 
     public void setupLevel()
@@ -105,6 +144,16 @@ public class Level extends Object{
         SpawnPoint.add(blocks[map.Row - 1][0]);
         SpawnPoint.add(blocks[map.Row - 1][map.Col -1 ]);
 
+
+         //add player      
+         Player player = new Player();
+         player.setWorldX(SpawnPoint.get(0).getWorldX());
+         player.setWorldY(SpawnPoint.get(0).getWorldY());
+         player.Pos = SpawnPoint.get(0);
+         player.setScreenX(gh.screenWidth/2);
+         player.setScreenY(gh.screenHight/2);
+         player.level = this;
+         playerlist.add(player);
     }
 
     private Block DFS(Block[][] b , int i, int j)

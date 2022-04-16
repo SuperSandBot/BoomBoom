@@ -8,7 +8,7 @@
             "type": "java",
             "name": "Launch GameMain",
             "request": "launch",
-            "vmArgs": "--module-path D:/project/javafx-sdk-17.0.2/lib --add-modules javafx.controls,javafx.fxml",
+            "vmArgs": "--module-path JAVAFX/lib --add-modules javafx.controls,javafx.fxml",
             "mainClass": "Game.GameMain",
             "projectName": "BoomBoom_752c7142"
         },

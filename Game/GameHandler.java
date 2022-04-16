@@ -1,7 +1,5 @@
 package Game;
 
-import java.util.ArrayList;
-
 import Game.GameObject.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,7 +27,7 @@ public class GameHandler extends Parent implements Runnable {
     boolean running = false;
     GraphicsContext gp;
     Canvas canvas;
-    ArrayList<Player> playerlist = new ArrayList<Player>();
+
     ControlHandler controlHandler;
 
 
@@ -49,19 +47,9 @@ public class GameHandler extends Parent implements Runnable {
         level.setWorldY(0);
         level.setupLevel();
 
-        //add player
-        Player player = new Player();
-        player.setWorldX(level.SpawnPoint.get(0).getWorldX());
-        player.setWorldY(level.SpawnPoint.get(0).getWorldY());
-        player.Pos = level.SpawnPoint.get(0);
-        player.setScreenX(screenWidth/2);
-        player.setScreenY(screenHight/2);
-
-        playerlist.add(player);
-
         //setup controler
         controlHandler = new ControlHandler();
-        controlHandler.player = playerlist.get(0);
+        controlHandler.player = level.playerlist.get(0);
         scene.setOnKeyPressed(controlHandler);
 
         controlHandler.level = level;
@@ -101,9 +89,6 @@ public class GameHandler extends Parent implements Runnable {
         gp.clearRect(0, 0,screenWidth, screenHight);
         level.draw(gp);
 
-        for (Player player : playerlist) {
-            player.draw(gp);
-        }
       
     }
 
@@ -111,11 +96,7 @@ public class GameHandler extends Parent implements Runnable {
         
         level.update();
         controlHandler.update();
-        for (Player player : playerlist) {
-            player.update();
-        }
 
-        level.setScreenX(level.getWorldX() - playerlist.get(0).getWorldX() + playerlist.get(0).getScreenX());
-        level.setScreenY(level.getWorldY() - playerlist.get(0).getWorldY() + playerlist.get(0).getScreenY());
+        
     }
 }
