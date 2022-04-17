@@ -1,5 +1,7 @@
 package Game;
 
+import java.util.concurrent.TimeUnit;
+
 import Game.GameObject.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,7 +32,6 @@ public class GameHandler extends Parent implements Runnable {
 
     ControlHandler controlHandler;
 
-
     public GameHandler()
     {
         //set up canvas side
@@ -58,12 +59,16 @@ public class GameHandler extends Parent implements Runnable {
         gp = canvas.getGraphicsContext2D();
 
         new Thread(this).start();
+
+        BackGroundExacutor.Scheduler.scheduleAtFixedRate(new Runnable() {
+
+            @Override
+            public void run() {
+                Tic();     
+            }
+            
+        }, 0, 1, TimeUnit.SECONDS);
         
-    }
-
-    public void setupCollisionList()
-    {
-
     }
 
     @Override
@@ -78,7 +83,7 @@ public class GameHandler extends Parent implements Runnable {
 
             // need this thread.sleep or say good by to CPU and GPU
             try {
-                Thread.sleep(50);
+                Thread.sleep(30);
             } catch (InterruptedException ex) {
             }
         }
@@ -97,6 +102,10 @@ public class GameHandler extends Parent implements Runnable {
         level.update();
         controlHandler.update();
 
-        
+    }
+
+    private void Tic()
+    {
+        level.Tic();
     }
 }

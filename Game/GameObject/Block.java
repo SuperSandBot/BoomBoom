@@ -70,6 +70,12 @@ public class Block extends Object {
             }
     }
 
+    public void detroyBlock()
+    {
+        bType = blockTypes.NONE;
+        blockImage = null; 
+    }
+
     public void draw(GraphicsContext gp)
     {
         if(blockImage != null)

@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 public class Player extends Object
 {
     public int power = 1;
-    public int speed = 8;
+    public int speed = 16;
     public Block Pos;
     public Level level;
 

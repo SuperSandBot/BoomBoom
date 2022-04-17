@@ -4,6 +4,7 @@ import Game.GameObject.Block;
 import Game.GameObject.Player;
 import Game.GameObject.Block.blockTypes;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class ControlHandler implements EventHandler<KeyEvent> {
@@ -79,14 +80,14 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                     }
                 }
                 break;
-            case SPACE:
-
-                player.playerPlantBoom();
-                break;
-
             default:
                 break;
         } 
+
+        if(event.getCode() == KeyCode.SPACE)
+        {
+            player.playerPlantBoom();
+        }
     }
 
     public void update()
