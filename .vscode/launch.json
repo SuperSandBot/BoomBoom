@@ -6,11 +6,25 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch testmain",
+            "request": "launch",
+            "mainClass": "Game.GUI.testmain",
+            "projectName": "BoomBoom_a5436dad"
+        },
+        {
+            "type": "java",
+            "name": "Launch MainUI",
+            "request": "launch",
+            "mainClass": "Game.GUI.MainUI",
+            "projectName": "BoomBoom_a5436dad"
+        },
+        {
+            "type": "java",
             "name": "Launch GameMain",
             "request": "launch",
             "vmArgs": "--module-path JAVAFX/lib --add-modules javafx.controls,javafx.fxml",
             "mainClass": "Game.GameMain",
-            "projectName": "BoomBoom_752c7142"
+            "projectName": "BoomBoom_a5436dad"
         },
         {
             "type": "java",
