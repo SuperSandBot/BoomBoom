@@ -1,6 +1,7 @@
 package Game;
 
 import Game.GameObject.Block;
+import Game.GameObject.Item;
 import Game.GameObject.Player;
 import Game.GameObject.Block.blockTypes;
 import javafx.event.EventHandler;
@@ -18,6 +19,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent event) {
 
+        if(player.hideplayer == true) return;
         switch(event.getCode())
         {
             case UP:
@@ -29,6 +31,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 {
                     if(player.Pos.top.bType == blockTypes.NONE)
                     {
+                        if(level.checkBoomPos(player.Pos.top)) return;
                         targetPos = player.Pos.top;
                         Move();
                     }
@@ -44,6 +47,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 {
                     if(player.Pos.down.bType == blockTypes.NONE)
                     {
+                        if(level.checkBoomPos(player.Pos.down)) return;
                         targetPos = player.Pos.down;
                         Move();
                     }
@@ -59,6 +63,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 {
                     if(player.Pos.left.bType == blockTypes.NONE)
                     {
+                        if(level.checkBoomPos(player.Pos.left)) return;
                         targetPos = player.Pos.left;
                         Move();
                     }
@@ -75,6 +80,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 {
                     if(player.Pos.right.bType == blockTypes.NONE)
                     {
+                        if(level.checkBoomPos(player.Pos.right)) return;
                         targetPos = player.Pos.right;
                         Move();
                     }
@@ -98,8 +104,14 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             player.setWorldY(player.getWorldY() + moveY);
             if(player.getWorldX() == targetPos.getWorldX() && player.getWorldY() == targetPos.getWorldY())
             {
-                player.Pos = targetPos;
                 isMoving = false;
+                player.Pos = targetPos;
+                Item item = level.itemCheck(targetPos);
+                if(item != null)
+                {
+                    player.playerPickItem(item);
+                    level.RemoveItem(item);
+                }
             }
         }
         //System.out.println(player.getWorldX()+ "/" + player.getWorldY());
@@ -109,8 +121,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
     {
         int dx = targetPos.getWorldX() - player.Pos.getWorldX();
         int dy = targetPos.getWorldY() - player.Pos.getWorldY();
-        moveX = dx / player.speed;
-        moveY = dy / player.speed;
+        moveX = dx / player.getSpeed();
+        moveY = dy / player.getSpeed();
         isMoving = true;  
     }
 }

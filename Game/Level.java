@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import Game.GameObject.*;
 import Game.GameObject.Object;
 import Game.GameObject.Block.blockTypes;
+import Game.GameObject.Item.itemTypes;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Level extends Object{
@@ -16,11 +17,13 @@ public class Level extends Object{
     GameHandler gh;
     Map map;
     Block[][] blocks;
-    ArrayList<Player> playerlist = new ArrayList<Player>();
+    ArrayList<Player> playerlist;
     ArrayList<Boom> Booms = new ArrayList<Boom>();
     ArrayList<BoomSplase> boomSplases = new ArrayList<BoomSplase>();
-    ArrayList<Block> SpawnPoint = new ArrayList<Block>();
+    ArrayList<Item> items = new ArrayList<Item>();
 
+    ArrayList<Block> SpawnPoint = new ArrayList<Block>();
+   
     public Level(GameHandler gh,Map map , int worldHight, int worldWidth)
     {
         super();
@@ -41,7 +44,11 @@ public class Level extends Object{
             {
                 blocks[i][j].draw(gp);
             }
-        } 
+        }
+        
+        for (Item item : items) {
+            if(item != null) item.draw(gp);
+        }
 
         if(boomSplases.size() > 0)
         {
@@ -52,7 +59,7 @@ public class Level extends Object{
         }
 
         for (Boom boom : Booms) {
-            boom.draw(gp);
+            if(boom != null)  boom.draw(gp);
         }
   
         for (Player player : playerlist) {
@@ -70,15 +77,6 @@ public class Level extends Object{
             player.update();
         }
 
-        for (Boom boom : Booms) {
-            boom.update();
-        }
-
-        for (BoomSplase splase : boomSplases)
-        {
-            splase.update();
-        }
-        
         // xác định vị trí block trên màng hình
         int x = 0;
         int y = 0;
@@ -96,6 +94,21 @@ public class Level extends Object{
             y = 0;
         }
 
+        for (Boom boom : Booms) {
+            if(boom != null) boom.update();
+        }
+
+        for (BoomSplase splase : boomSplases)
+        {
+            if(splase != null)
+            splase.update();
+        }
+
+        for (Item item : items) {
+            if(item != null)
+            item.update();
+        }
+
         this.setScreenX(getWorldX() - playerlist.get(0).getWorldX() + playerlist.get(0).getScreenX());
         this.setScreenY(getWorldY() - playerlist.get(0).getWorldY() + playerlist.get(0).getScreenY());
     }
@@ -106,11 +119,41 @@ public class Level extends Object{
         }
     }
 
-    public void playerPlantBoom(Player player,Block block)
+    public void RespawnPlayer(Player player)
+    {
+
+        if(player.playerItem.isEmpty() == false)
+        {
+            for(int i = 0; i < 3 ; i++)
+            {    
+                if(player.playerItem.isEmpty()) break;
+                Item item = player.playerItem.get(0);
+                itemSpawn(item.iTypes, randomBlock());
+                player.playerRemoveItem(item);
+                
+            }
+        }
+        
+        player.hideplayer = true;
+
+        BackGroundExacutor.Scheduler.schedule(new Runnable() {
+
+            @Override
+            public void run() {
+                Block ramdomspawn = SpawnPoint.get(BackGroundExacutor.randomnum.nextInt(3));
+                player.setWorldX(ramdomspawn.getWorldX());
+                player.setWorldY(ramdomspawn.getWorldY());
+                player.Pos = ramdomspawn;
+                player.hideplayer = false;
+            }
+        }, 5, TimeUnit.SECONDS);
+    }
+
+    public void playerPlantBoom(Block block,int power)
     {
         Boom boom = new Boom(block.getWorldX(), block.getWorldY(), block.getScreenX(), block.getScreenY());
         boom.pos = block;
-        boom.power = player.power;
+        boom.power = power;
         boom.level = this;
         Booms.add(boom);
     }
@@ -125,10 +168,8 @@ public class Level extends Object{
 
     public void boomExplode(Boom boom)
     {
-        int power = 3;
-
         //Top
-        BoomSplase[] splasesTop = new BoomSplase[power + 1];
+        BoomSplase[] splasesTop = new BoomSplase[boom.power + 1];
         splasesTop[0] = new BoomSplase(boom.pos,"top",false);
         boomSplases.add(splasesTop[0]);
         for(int i = 1;i < splasesTop.length ; i++)
@@ -141,28 +182,33 @@ public class Level extends Object{
                     boomSplases.add(splasesTop[i]);
                     if(i+1 >= splasesTop.length) splasesTop[i].End = true;
 
-                    Boom b = boomCheck(splasesTop[i].pos);
-                    if(b != null)
-                    {          
-                        if(b.explode != true) b.boomExplode();
-                    }
+                    boomCheck(splasesTop[i].pos);
+                    Item item = itemCheck(splasesTop[i].pos);
+                    if(item != null) RemoveItem(item); 
+                    Player player = playerCheck(splasesTop[i].pos);    
+                    if(player != null) RespawnPlayer(player);   
                 }
                 else
                 {
                     splasesTop[i-1].End = true;
-                    splasesTop[i-1].pos.top.detroyBlock();
+                    BlockCheck(splasesTop[i-1].pos.top);
                     break;
                 }
             }
             else
             {
+                
                 splasesTop[i-1].End = true;
+                Item item = itemCheck(splasesTop[i-1].pos);
+                if(item != null) RemoveItem(item); 
+                Player player = playerCheck(splasesTop[i-1].pos);    
+                if(player != null) RespawnPlayer(player);   
                 break;
             }
         }  
         
         //Down
-        BoomSplase[] splasesDown = new BoomSplase[power + 1];
+        BoomSplase[] splasesDown = new BoomSplase[boom.power + 1];
         splasesDown[0] = new BoomSplase(boom.pos,"down",false);
         boomSplases.add(splasesDown[0]);
         for(int i = 1 ;i < splasesDown.length ; i++)
@@ -174,17 +220,16 @@ public class Level extends Object{
                     splasesDown[i] = new BoomSplase(splasesDown[i-1].pos.down, "down", false);
                     boomSplases.add(splasesDown[i]);
                     if(i+1 >= splasesDown.length) splasesDown[i].End = true;
-
-                    Boom b = boomCheck(splasesDown[i].pos);
-                    if(b != null)
-                    {          
-                        if(b.explode != true) b.boomExplode();
-                    }
+                    boomCheck(splasesDown[i].pos);
+                    Item item = itemCheck(splasesDown[i].pos);
+                    if(item != null) RemoveItem(item);   
+                    Player player = playerCheck(splasesDown[i].pos);    
+                    if(player != null) RespawnPlayer(player);    
                 }
                 else
                 {
                     splasesDown[i-1].End = true;
-                    splasesDown[i-1].pos.down.detroyBlock();
+                    BlockCheck(splasesDown[i-1].pos.down);
                     break;
                 }
             }
@@ -196,7 +241,7 @@ public class Level extends Object{
         } 
 
         //Left
-        BoomSplase[] splasesLeft = new BoomSplase[power + 1];
+        BoomSplase[] splasesLeft = new BoomSplase[boom.power + 1];
         splasesLeft[0] = new BoomSplase(boom.pos,"left",false);
         boomSplases.add(splasesLeft[0]);
         for(int i = 1;i < splasesLeft.length ; i++)
@@ -208,17 +253,16 @@ public class Level extends Object{
                     splasesLeft[i] = new BoomSplase(splasesLeft[i-1].pos.left, "left", false);
                     boomSplases.add(splasesLeft[i]);
                     if(i+1 >= splasesLeft.length) splasesLeft[i].End = true;
-
-                    Boom b = boomCheck(splasesLeft[i].pos);
-                    if(b != null)
-                    {          
-                        if(b.explode != true) b.boomExplode();
-                    }
+                    boomCheck(splasesLeft[i].pos); 
+                    Item item = itemCheck(splasesLeft[i].pos);
+                    if(item != null) RemoveItem(item);    
+                    Player player = playerCheck(splasesLeft[i].pos);    
+                    if(player != null) RespawnPlayer(player);  
                 }
                 else
                 {
                     splasesLeft[i-1].End = true;
-                    splasesLeft[i-1].pos.left.detroyBlock();
+                    BlockCheck(splasesLeft[i-1].pos.left);
                     break;
                 }
             }
@@ -230,7 +274,7 @@ public class Level extends Object{
         }  
 
         //Right
-        BoomSplase[] splasesRight = new BoomSplase[power + 1];
+        BoomSplase[] splasesRight = new BoomSplase[boom.power + 1];
         splasesRight[0] = new BoomSplase(boom.pos,"right",false);
         boomSplases.add(splasesRight[0]);
         for(int i = 1;i < splasesRight.length ; i++)
@@ -242,17 +286,16 @@ public class Level extends Object{
                     splasesRight[i] = new BoomSplase(splasesRight[i-1].pos.right, "right", false);
                     boomSplases.add(splasesRight[i]);
                     if(i+1 >= splasesRight.length) splasesRight[i].End = true;
-
-                    Boom b = boomCheck(splasesRight[i].pos);
-                    if(b != null)
-                    {          
-                        if(b.explode != true) b.boomExplode();
-                    }
+                    boomCheck(splasesRight[i].pos);  
+                    Item item = itemCheck(splasesRight[i].pos);
+                    if(item != null) RemoveItem(item);    
+                    Player player = playerCheck(splasesRight[i].pos);    
+                    if(player != null) RespawnPlayer(player);     
                 }
                 else
                 {
                     splasesRight[i-1].End = true;
-                    splasesRight[i-1].pos.right.detroyBlock();
+                    BlockCheck(splasesRight[i-1].pos.right);
                     break;
                 }
             }
@@ -274,19 +317,113 @@ public class Level extends Object{
         }, 200, TimeUnit.MILLISECONDS);
     }
 
-    private Boom boomCheck(Block pos)
+    private void itemSpawn(itemTypes iTypes,Block pos)
     {
-        for (Boom boom : Booms) {
-            if(boom.pos == pos) return boom;
+        if(iTypes != null)
+        {
+            Item item = new Item();
+            item.setWorldX(pos.getWorldX());
+            item.setWorldY(pos.getWorldY());
+            item.setBType(iTypes);
+            item.pos = pos;
+            items.add(item);
+        }
+    }
+    
+    public Block randomBlock()
+    {
+        boolean checking = true;
+        Block block;
+        while(checking)
+        {
+            block = blocks[BackGroundExacutor.randomnum.nextInt(blocks.length)][BackGroundExacutor.randomnum.nextInt(blocks[0].length)];
+            if(block.bType == blockTypes.NONE)
+            {
+                if(itemCheck(block) == null)
+                {
+                    checking = false;
+                    return block;
+                   
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    public itemTypes RamdomItem()
+    {
+        if(BackGroundExacutor.randomnum.nextInt(10) < 6)
+        {
+            switch(BackGroundExacutor.randomnum.nextInt(8))
+            {
+                case 0:
+                case 1:
+                    return itemTypes.GOLDCOIN;
+                case 2:
+                case 3:
+                    return itemTypes.BOOMUPGRADE;
+                case 4:
+                case 5:
+                    return itemTypes.BOOT;
+                case 6:
+                    return itemTypes.ENERGYDRINK;
+                case 7:
+                case 8:
+                    return itemTypes.VILE;
+                default:
+                    break;
+            }
         }
         return null;
+    }
+    
+    public void RemoveItem(Item item)
+    {
+        item.itemImage = null;
+        item.itemShadow = null;
+        item.pos = null;
+        items.remove(item);
+    }
+    
+    public Item itemCheck(Block block)
+    {
+        if(items.isEmpty()) return null;
+        for (Item item : items) {
+            
+            if(item.pos == block)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    private void BlockCheck(Block block)
+    {
+        if(block.bType == blockTypes.STONEBLOCK) return;
+        if(block.bType != blockTypes.NONE)
+        {
+            block.bType = blockTypes.NONE;
+            itemSpawn(RamdomItem(),block);
+        }
+    }
+
+    private void boomCheck(Block pos)
+    {
+        for (Boom boom : Booms) {
+            if(boom.pos == pos)
+            {
+                if(boom.explode != true) boom.boomExplode();
+            }
+        }
     }
 
     private Player playerCheck(Block pos)
     {
         for(Player player : playerlist)
         {
-            if(player.Pos == pos) return player;
+            if(player.Pos == pos && player.hideplayer == false) return player;
         }
         return null;
     }
@@ -309,7 +446,26 @@ public class Level extends Object{
                 blocks[i][j].setWorldY(this.getWorldY() + y + 96);
 
                 // xac dinh the loai
-                blocks[i][j].setBType(blockMap[i][j]);
+                switch(blockMap[i][j])
+                {
+                    case 1:
+                        blocks[i][j].setBType(blockTypes.DIRTBLOCK00);
+                        break;
+                    case 2:
+                        blocks[i][j].setBType(blockTypes.DIRTBLOCK01);
+                        break;
+                    case 3:
+                        blocks[i][j].setBType(blockTypes.GRASSBLOCK);
+                        break;
+                    case 4:
+                        blocks[i][j].setBType(blockTypes.STONEBLOCK);
+                        break;
+                    default:
+                    case 0:
+                        blocks[i][j].setBType(blockTypes.NONE);
+                        break;
+                }
+                
 
                 y += 64;
             }
@@ -336,9 +492,9 @@ public class Level extends Object{
 
          //add player      
          Player player = new Player();
-         player.setWorldX(SpawnPoint.get(0).getWorldX());
-         player.setWorldY(SpawnPoint.get(0).getWorldY());
-         player.Pos = SpawnPoint.get(0);
+         player.setWorldX(SpawnPoint.get(2).getWorldX());
+         player.setWorldY(SpawnPoint.get(2).getWorldY());
+         player.Pos = SpawnPoint.get(2);
          player.setScreenX(gh.screenWidth/2);
          player.setScreenY(gh.screenHight/2);
          player.level = this;

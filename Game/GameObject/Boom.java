@@ -1,9 +1,6 @@
 package Game.GameObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import Game.BackGroundExacutor;
 import Game.Level;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

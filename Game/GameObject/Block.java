@@ -28,57 +28,34 @@ public class Block extends Object {
         super(worldX, worldY, screenX, screenY);
     }
 
-    public void setBType(int blockID)
+    public void setBType(blockTypes bType)
     {
-        switch(blockID)
-        {
-            case 0:
-                this.bType = blockTypes.NONE;
-                break;
-            case 1:
-                this.bType = blockTypes.DIRTBLOCK00;
-                break;
-            case 2:
-                this.bType = blockTypes.DIRTBLOCK01;
-                break;
-            case 3:
-                this.bType = blockTypes.GRASSBLOCK;
-                break;
-            case 4:
-                this.bType = blockTypes.STONEBLOCK;
-                break;  
-        }
+        this.bType = bType;
 
-        switch (blockID)
+        switch (bType)
             {
-                case 1:
+                case DIRTBLOCK00:
                     blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/DirtBlock00.png"));
                     break;
-                case 2:
+                case DIRTBLOCK01:
                     blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/DirtBlock01.png"));
                     break;
-                case 3:
+                case GRASSBLOCK:
                     blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/grassblock.png"));
                     break;
-                case 4:
+                case STONEBLOCK:
                     blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/stone.png"));
                     break;
                 default:
-                    case 0:
+                    case NONE:
                     blockImage = null;
                     break; 
             }
     }
 
-    public void detroyBlock()
-    {
-        bType = blockTypes.NONE;
-        blockImage = null; 
-    }
-
     public void draw(GraphicsContext gp)
     {
-        if(blockImage != null)
+        if(bType != blockTypes.NONE)
         {
             gp.drawImage(blockImage, getScreenX(), getScreenY()- 32 );
         }

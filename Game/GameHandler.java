@@ -1,5 +1,6 @@
 package Game;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import Game.GameObject.*;
@@ -32,6 +33,9 @@ public class GameHandler extends Parent implements Runnable {
 
     ControlHandler controlHandler;
 
+    int Timer = 0;
+    ArrayList<Player> playerList = new ArrayList<Player>();
+
     public GameHandler()
     {
         //set up canvas side
@@ -39,21 +43,7 @@ public class GameHandler extends Parent implements Runnable {
         canvas = new Canvas(screenWidth,screenHight);
         this.getChildren().add(canvas);
 
-        //set up level
-        Map map = new Map();
-        map.setScreenX(64);
-        map.setScreenY(64);
-        level = new Level(this,map, worldHight, worldWidth);
-        level.setWorldX(0);
-        level.setWorldY(0);
-        level.setupLevel();
-
-        //setup controler
-        controlHandler = new ControlHandler();
-        controlHandler.player = level.playerlist.get(0);
-        scene.setOnKeyPressed(controlHandler);
-
-        controlHandler.level = level;
+        startGame();
 
         //set up update and draw and thread need to be last
         gp = canvas.getGraphicsContext2D();
@@ -102,10 +92,40 @@ public class GameHandler extends Parent implements Runnable {
         level.update();
         controlHandler.update();
 
+        if(Timer == 180)
+        {
+            EndGame();
+        }
     }
 
     private void Tic()
     {
+        Timer++;
         level.Tic();
+    }
+
+    private void EndGame()
+    {
+
+    }
+
+    private void startGame()
+    {
+        //set up level
+        Map map = new Map();
+        map.setScreenX(64);
+        map.setScreenY(64);
+        level = new Level(this,map, worldHight, worldWidth);
+        level.setWorldX(0);
+        level.setWorldY(0);
+        level.playerlist = playerList;
+        level.setupLevel();
+
+        //setup controler
+        controlHandler = new ControlHandler();
+        controlHandler.player = level.playerlist.get(0);
+        scene.setOnKeyPressed(controlHandler);
+
+        controlHandler.level = level;
     }
 }
