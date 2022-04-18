@@ -4,6 +4,7 @@ import Game.GameObject.Block;
 import Game.GameObject.Item;
 import Game.GameObject.Player;
 import Game.GameObject.Block.blockTypes;
+import Game.Sound.GameSound;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,6 +16,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
     private boolean isMoving= false;
     private int moveX,moveY;
     private Block targetPos;
+    GameSound gs = new GameSound();
 
     @Override
     public void handle(KeyEvent event) {
@@ -34,6 +36,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.top)) return;
                         targetPos = player.Pos.top;
                         Move();
+                        gs.Audio(GameSound.FOOT);	
+                        
                     }
                 }
                 break;
@@ -50,6 +54,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.down)) return;
                         targetPos = player.Pos.down;
                         Move();
+                        gs.Audio(GameSound.FOOT);	
+                        
                     }
                 }
                 break;
@@ -66,6 +72,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.left)) return;
                         targetPos = player.Pos.left;
                         Move();
+                        gs.Audio(GameSound.FOOT);	
+                        
                     }
                 }
                 break;  
@@ -83,6 +91,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.right)) return;
                         targetPos = player.Pos.right;
                         Move();
+                        gs.Audio(GameSound.FOOT);	
+                        
                     }
                 }
                 break;
@@ -95,6 +105,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             player.playerPlantBoom();
         }
     }
+
 
     public void update()
     {
@@ -109,7 +120,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 Item item = level.itemCheck(targetPos);
                 if(item != null)
                 {
-                    player.playerPickItem(item);
+                    player.playerPickItem(item); 
+                    gs.Audio(GameSound.ITEM);
                     level.RemoveItem(item);
                 }
             }

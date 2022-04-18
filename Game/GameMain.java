@@ -1,5 +1,8 @@
 package Game;
 
+import Game.Sound.GameSound;
+
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,7 +20,8 @@ public class GameMain extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         gameHandler = new GameHandler();
-
+        // GameSound gs = new GameSound();
+        // gs.putAudio(GameSound.BOMB);
         primaryStage.setTitle("BoomBoom");
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHight);
