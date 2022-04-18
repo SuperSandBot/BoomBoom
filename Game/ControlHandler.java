@@ -114,7 +114,6 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 }
             }
         }
-        //System.out.println(player.getWorldX()+ "/" + player.getWorldY());
     }
 
     public void Move()

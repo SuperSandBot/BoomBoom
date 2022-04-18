@@ -18,6 +18,7 @@ public class GameMain extends Application {
 
         gameHandler = new GameHandler();
 
+
         primaryStage.setTitle("BoomBoom");
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHight);

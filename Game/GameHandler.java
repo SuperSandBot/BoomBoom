@@ -32,8 +32,9 @@ public class GameHandler extends Parent implements Runnable {
     Canvas canvas;
 
     ControlHandler controlHandler;
-
     int Timer = 0;
+    boolean gamerunning = true;
+
     ArrayList<Player> playerList = new ArrayList<Player>();
 
     public GameHandler()
@@ -89,9 +90,12 @@ public class GameHandler extends Parent implements Runnable {
 
     private void Update() {
         
-        level.update();
-        controlHandler.update();
-
+        if(gamerunning)
+        {
+            level.update();
+            controlHandler.update();
+        }
+        
         if(Timer == 180)
         {
             EndGame();
@@ -101,12 +105,13 @@ public class GameHandler extends Parent implements Runnable {
     private void Tic()
     {
         Timer++;
-        level.Tic();
+        if(gamerunning) level.Tic();
+        
     }
 
     private void EndGame()
     {
-
+        gamerunning = false;
     }
 
     private void startGame()
