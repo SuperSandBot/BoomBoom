@@ -1,19 +1,19 @@
 package Game.HightScoreList;
 
 public class HightScore {
-    private string name;
+    private String name;
     private int score;
     
-    public HightScore(string name, int score){
+    public HightScore(String name, int score){
         this.name = name;
         this.score = score;
     }
 
-    public string getName(){
+    public String getName(){
         return name;
     }
 
-    public void setName(string name){
+    public void setName(String name){
         this.name = name;
     }
 

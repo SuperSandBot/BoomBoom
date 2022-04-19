@@ -2,8 +2,6 @@ package Game;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 public class GameMain extends Application {
@@ -19,12 +17,6 @@ public class GameMain extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         gameHandler = new GameHandler();
-
-        String musicFile = "Tranceition.mp4";     // For example
-
-        Media sound = new Media(getClass().getResource(musicFile).toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.play();
 
         primaryStage.setTitle("BoomBoom");
         primaryStage.setWidth(screenWidth);

@@ -7,6 +7,7 @@ import Game.GameObject.*;
 import Game.GameObject.Object;
 import Game.GameObject.Block.blockTypes;
 import Game.GameObject.Item.itemTypes;
+import Game.Sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Level extends Object{
@@ -14,6 +15,8 @@ public class Level extends Object{
     public int worldWidth;
     public int worldHight;
 
+    GameSound gs = new GameSound();
+    
     GameHandler gh;
     Map map;
     Block[][] blocks;
@@ -121,6 +124,7 @@ public class Level extends Object{
 
     public void RespawnPlayer(Player player)
     {
+        gs.Audio(GameSound.BOMBER_DIE);
 
         if(player.playerItem.isEmpty() == false)
         {
@@ -130,6 +134,7 @@ public class Level extends Object{
                 Item item = player.playerItem.get(0);
                 itemSpawn(item.iTypes, randomBlock());
                 player.playerRemoveItem(item);
+                
                 
             }
         }
@@ -156,6 +161,8 @@ public class Level extends Object{
         boom.power = power;
         boom.level = this;
         Booms.add(boom);
+        gs.Audio(GameSound.BOMB);
+
     }
 
     public boolean checkBoomPos(Block block)
@@ -172,6 +179,7 @@ public class Level extends Object{
         BoomSplase[] splasesTop = new BoomSplase[boom.power + 1];
         splasesTop[0] = new BoomSplase(boom.pos,"top",false);
         boomSplases.add(splasesTop[0]);
+        gs.Audio(GameSound.BOMB_BANG);
         for(int i = 1;i < splasesTop.length ; i++)
         {
             if(splasesTop[i-1].pos.top != null)
