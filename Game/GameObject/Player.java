@@ -41,6 +41,7 @@ public class Player extends Object
 
     public void update() 
     {
+        
     }
 
     public int getSpeed()

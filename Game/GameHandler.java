@@ -121,8 +121,10 @@ public class GameHandler extends Parent implements Runnable {
         map.setScreenX(64);
         map.setScreenY(64);
         level = new Level(this,map, worldHight, worldWidth);
-        level.setWorldX(0);
-        level.setWorldY(0);
+        level.setWorldX(worldWidth/2);
+        level.setWorldY(worldHight/2);
+        level.setScreenX(0);
+        level.setScreenY(0);
         level.playerlist = playerList;
         level.setupLevel();
 

@@ -69,6 +69,7 @@ public class Level extends Object{
             player.draw(gp);
         }
 
+
     }
 
     public void update()
@@ -112,14 +113,14 @@ public class Level extends Object{
             item.update();
         }
 
-        this.setScreenX(getWorldX() - playerlist.get(0).getWorldX() + playerlist.get(0).getScreenX());
-        this.setScreenY(getWorldY() - playerlist.get(0).getWorldY() + playerlist.get(0).getScreenY());
+        //this.setScreenX(getWorldX() - playerlist.get(0).getWorldX() + playerlist.get(0).getScreenX());
+        //this.setScreenY(getWorldY() - playerlist.get(0).getWorldY() + playerlist.get(0).getScreenY());
     }
 
     public void Tic() {
         for (Boom boom : Booms) {
             boom.Tic();
-        }
+        } 
     }
 
     public void RespawnPlayer(Player player)
@@ -148,6 +149,8 @@ public class Level extends Object{
                 Block ramdomspawn = SpawnPoint.get(BackGroundExacutor.randomnum.nextInt(3));
                 player.setWorldX(ramdomspawn.getWorldX());
                 player.setWorldY(ramdomspawn.getWorldY());
+                player.setScreenX(ramdomspawn.getScreenX() + 32);
+                player.setScreenY(ramdomspawn.getScreenY() + 32);
                 player.Pos = ramdomspawn;
                 player.hideplayer = false;
             }
@@ -156,13 +159,12 @@ public class Level extends Object{
 
     public void playerPlantBoom(Block block,int power)
     {
+        gs.Audio(GameSound.BOMB);
         Boom boom = new Boom(block.getWorldX(), block.getWorldY(), block.getScreenX(), block.getScreenY());
         boom.pos = block;
         boom.power = power;
         boom.level = this;
         Booms.add(boom);
-        gs.Audio(GameSound.BOMB);
-
     }
 
     public boolean checkBoomPos(Block block)
@@ -175,11 +177,11 @@ public class Level extends Object{
 
     public void boomExplode(Boom boom)
     {
+        gs.Audio(GameSound.BOMB_BANG);
         //Top
         BoomSplase[] splasesTop = new BoomSplase[boom.power + 1];
         splasesTop[0] = new BoomSplase(boom.pos,"top",false);
         boomSplases.add(splasesTop[0]);
-        gs.Audio(GameSound.BOMB_BANG);
         for(int i = 1;i < splasesTop.length ; i++)
         {
             if(splasesTop[i-1].pos.top != null)
@@ -497,16 +499,16 @@ public class Level extends Object{
         SpawnPoint.add(blocks[map.Row - 1][0]);
         SpawnPoint.add(blocks[map.Row - 1][map.Col -1 ]);
 
+        //add player      
+        Player player = new Player();
+        player.setWorldX(SpawnPoint.get(0).getWorldX());
+        player.setWorldY(SpawnPoint.get(0).getWorldY());
+        player.setScreenX(SpawnPoint.get(0).getScreenX()+96);
+        player.setScreenY(SpawnPoint.get(0).getScreenY()+96);
+        player.Pos = SpawnPoint.get(0);
+        player.level = this;
+        playerlist.add(player); 
 
-         //add player      
-         Player player = new Player();
-         player.setWorldX(SpawnPoint.get(2).getWorldX());
-         player.setWorldY(SpawnPoint.get(2).getWorldY());
-         player.Pos = SpawnPoint.get(2);
-         player.setScreenX(gh.screenWidth/2);
-         player.setScreenY(gh.screenHight/2);
-         player.level = this;
-         playerlist.add(player);
     }
 
     private Block DFS(Block[][] b , int i, int j)

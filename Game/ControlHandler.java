@@ -36,7 +36,6 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.top)) return;
                         targetPos = player.Pos.top;
                         Move();
-                        gs.Audio(GameSound.FOOT);	
                         
                     }
                 }
@@ -54,7 +53,6 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.down)) return;
                         targetPos = player.Pos.down;
                         Move();
-                        gs.Audio(GameSound.FOOT);	
                         
                     }
                 }
@@ -72,7 +70,6 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.left)) return;
                         targetPos = player.Pos.left;
                         Move();
-                        gs.Audio(GameSound.FOOT);	
                         
                     }
                 }
@@ -91,7 +88,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                         if(level.checkBoomPos(player.Pos.right)) return;
                         targetPos = player.Pos.right;
                         Move();
-                        gs.Audio(GameSound.FOOT);	
+                        	
                         
                     }
                 }
@@ -102,6 +99,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
 
         if(event.getCode() == KeyCode.SPACE)
         {
+            if(isMoving) return;
             player.playerPlantBoom();
         }
     }
@@ -111,6 +109,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
     {
         if(isMoving)
         {
+            player.setScreenX(player.getScreenX() + moveX);
+            player.setScreenY(player.getScreenY() + moveY);
             player.setWorldX(player.getWorldX() + moveX);
             player.setWorldY(player.getWorldY() + moveY);
             if(player.getWorldX() == targetPos.getWorldX() && player.getWorldY() == targetPos.getWorldY())
@@ -130,6 +130,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
 
     public void Move()
     {
+        gs.Audio(GameSound.FOOT);
         int dx = targetPos.getWorldX() - player.Pos.getWorldX();
         int dy = targetPos.getWorldY() - player.Pos.getWorldY();
         moveX = dx / player.getSpeed();

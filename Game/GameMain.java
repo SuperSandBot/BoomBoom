@@ -12,7 +12,6 @@ public class GameMain extends Application {
     Scene scene;
     GameHandler gameHandler;
     
-    
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -21,7 +20,6 @@ public class GameMain extends Application {
         primaryStage.setTitle("BoomBoom");
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHight);
-        primaryStage.setResizable(false);
         primaryStage.setScene(gameHandler.scene);
         primaryStage.show();
     }
