@@ -21,6 +21,7 @@ public class GameMain extends Application {
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHight);
         primaryStage.setScene(gameHandler.scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

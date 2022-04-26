@@ -74,9 +74,7 @@ public class Level extends Object{
 
     public void update()
     {   
-        map.setScreenX(this.getScreenX() + 64);
-        map.setScreenY(this.getScreenY() + 64);
-        
+
         for (Player player : playerlist) {
             player.update();
         }
@@ -89,7 +87,7 @@ public class Level extends Object{
         {
             for(int j = 0; j < blocks[0].length; j++)
             {
-                blocks[i][j].setScreenX(this.getScreenX() + x + 64);
+                blocks[i][j].setScreenX(this.getScreenX() + x + 96);
                 blocks[i][j].setScreenY(this.getScreenY() + y + 64);
                 blocks[i][j].update();
                 y += 64;
@@ -98,14 +96,20 @@ public class Level extends Object{
             y = 0;
         }
 
-        for (Boom boom : Booms) {
-            if(boom != null) boom.update();
+        if(!Booms.isEmpty())
+        {
+            for (Boom boom : Booms) {
+                if(boom != null) boom.update();
+            }
         }
 
-        for (BoomSplase splase : boomSplases)
+        if(!boomSplases.isEmpty())
         {
-            if(splase != null)
-            splase.update();
+            for (BoomSplase splase : boomSplases)
+            {
+                if(splase != null)
+                splase.update();
+            }
         }
 
         for (Item item : items) {
@@ -139,18 +143,18 @@ public class Level extends Object{
                 
             }
         }
-        
         player.hideplayer = true;
 
         BackGroundExacutor.Scheduler.schedule(new Runnable() {
 
             @Override
             public void run() {
-                Block ramdomspawn = SpawnPoint.get(BackGroundExacutor.randomnum.nextInt(3));
+                Block ramdomspawn = SpawnPoint.get(BackGroundExacutor.randomnum.nextInt(2));
+                System.out.println(ramdomspawn);
                 player.setWorldX(ramdomspawn.getWorldX());
                 player.setWorldY(ramdomspawn.getWorldY());
-                player.setScreenX(ramdomspawn.getScreenX() + 32);
-                player.setScreenY(ramdomspawn.getScreenY() + 32);
+                player.setScreenX(ramdomspawn.getScreenX());
+                player.setScreenY(ramdomspawn.getScreenY());
                 player.Pos = ramdomspawn;
                 player.hideplayer = false;
             }
@@ -182,6 +186,7 @@ public class Level extends Object{
         BoomSplase[] splasesTop = new BoomSplase[boom.power + 1];
         splasesTop[0] = new BoomSplase(boom.pos,"top",false);
         boomSplases.add(splasesTop[0]);
+        if( playerCheck(splasesTop[0].pos) != null) RespawnPlayer(playerCheck(splasesTop[0].pos)); 
         for(int i = 1;i < splasesTop.length ; i++)
         {
             if(splasesTop[i-1].pos.top != null)
@@ -195,7 +200,7 @@ public class Level extends Object{
                     boomCheck(splasesTop[i].pos);
                     Item item = itemCheck(splasesTop[i].pos);
                     if(item != null) RemoveItem(item); 
-                    Player player = playerCheck(splasesTop[i].pos);    
+                    Player player = playerCheck(splasesTop[i].pos);   
                     if(player != null) RespawnPlayer(player);   
                 }
                 else
@@ -210,9 +215,7 @@ public class Level extends Object{
                 
                 splasesTop[i-1].End = true;
                 Item item = itemCheck(splasesTop[i-1].pos);
-                if(item != null) RemoveItem(item); 
-                Player player = playerCheck(splasesTop[i-1].pos);    
-                if(player != null) RespawnPlayer(player);   
+                if(item != null) RemoveItem(item);   
                 break;
             }
         }  
@@ -452,8 +455,10 @@ public class Level extends Object{
             {
                 // xac dinh vi tri
                 blocks[i][j] = new Block();
-                blocks[i][j].setWorldX(this.getWorldX() + x + 96);
+                blocks[i][j].setWorldX(this.getWorldX() + x + 128);
                 blocks[i][j].setWorldY(this.getWorldY() + y + 96);
+                blocks[i][j].setScreenX(this.getScreenX() + x + 96);
+                blocks[i][j].setScreenY(this.getScreenY() + y + 64);
 
                 // xac dinh the loai
                 switch(blockMap[i][j])
@@ -494,20 +499,28 @@ public class Level extends Object{
             }
         }  
 
-        SpawnPoint.add(blocks[0][0]);
-        SpawnPoint.add(blocks[0][map.Col -1]);
-        SpawnPoint.add(blocks[map.Row - 1][0]);
-        SpawnPoint.add(blocks[map.Row - 1][map.Col -1 ]);
+        SpawnPoint.add(blocks[0][map.Col /2]);
+        SpawnPoint.add(blocks[map.Row -1][map.Col /2]);
 
-        //add player      
-        Player player = new Player();
-        player.setWorldX(SpawnPoint.get(0).getWorldX());
-        player.setWorldY(SpawnPoint.get(0).getWorldY());
-        player.setScreenX(SpawnPoint.get(0).getScreenX()+96);
-        player.setScreenY(SpawnPoint.get(0).getScreenY()+96);
-        player.Pos = SpawnPoint.get(0);
-        player.level = this;
-        playerlist.add(player); 
+        //add player1      
+        Player player1 = new Player(0);
+        player1.setWorldX(SpawnPoint.get(0).getWorldX());
+        player1.setWorldY(SpawnPoint.get(0).getWorldY());
+        player1.setScreenX(SpawnPoint.get(0).getScreenX());
+        player1.setScreenY(SpawnPoint.get(0).getScreenY());
+        player1.Pos = SpawnPoint.get(0);
+        player1.level = this;
+        playerlist.add(player1); 
+
+        //add player2      
+        Player player2 = new Player(1);
+        player2.setWorldX(SpawnPoint.get(1).getWorldX());
+        player2.setWorldY(SpawnPoint.get(1).getWorldY());
+        player2.setScreenX(SpawnPoint.get(1).getScreenX());
+        player2.setScreenY(SpawnPoint.get(1).getScreenY());
+        player2.Pos = SpawnPoint.get(1);
+        player2.level = this;
+        playerlist.add(player2);
 
     }
 

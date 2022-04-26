@@ -13,13 +13,13 @@ public class Map extends Object {
     public int[][] blockMap;
     public Image image;
     public int Width, Hight;
-    public int Row = 8;
-    public int Col = 6;
+    public int Row = 13;
+    public int Col = 10;
 
     public Map()
     {
-        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/battleground02.png"));
-        LoadMap("/Game/Asset/Map/battleground02.txt");
+        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/lanepanel.png"));
+        LoadMap("/Game/Asset/Map/lanepanel.txt");
         this.Width = (int) image.getWidth();
         this.Hight = (int) image.getHeight();
 
@@ -28,7 +28,7 @@ public class Map extends Object {
     public Map(int worldX, int worldY, int screenX, int screenY) {
         super(worldX, worldY, screenX, screenY);
 
-        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/battleground02.png"));
+        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/lanepanel.png"));
     }
 
     private void LoadMap(String file)

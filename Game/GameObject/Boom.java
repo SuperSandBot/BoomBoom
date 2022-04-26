@@ -42,6 +42,19 @@ public class Boom extends Object{
     {
         setScreenX(pos.getScreenX());
         setScreenY(pos.getScreenY());
+    }
+
+    public void Tic() {
+
+        if(expoldeTic < 3)
+        {
+            expoldeTic++;
+        }
+        else
+        {
+            boomExplode();
+            
+        }  
 
         if(explode == false)
         {
@@ -68,19 +81,6 @@ public class Boom extends Object{
                     break;
             }
         }
-    }
-
-    public void Tic() {
-
-        if(expoldeTic < 3)
-        {
-            expoldeTic++;
-        }
-        else
-        {
-            boomExplode();
-            
-        }  
     }
 
     public void boomExplode()
