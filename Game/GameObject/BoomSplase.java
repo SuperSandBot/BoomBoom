@@ -53,10 +53,4 @@ public class BoomSplase extends Object {
         }
        
     }
-
-    public void update()
-    {
-        setScreenX(pos.getScreenX());
-        setScreenY(pos.getScreenY());
-    }
 }

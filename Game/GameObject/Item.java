@@ -10,7 +10,6 @@ public class Item extends Object{
         GOLDCOIN,
         BOOMUPGRADE,
         BOOT,
-        ENERGYDRINK,
         VILE;
     }
 
@@ -44,9 +43,6 @@ public class Item extends Object{
                     break;
                 case BOOT:
                     itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/boot.png"));
-                    break;
-                case ENERGYDRINK:
-                    itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/energydrink.png"));
                     break;
                 case VILE:
                     itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/vile.png"));

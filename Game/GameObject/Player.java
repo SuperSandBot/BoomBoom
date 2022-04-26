@@ -19,7 +19,6 @@ public class Player extends Object
     public Block Pos;
     public Level level;
     public boolean hideplayer = false;
-    public boolean oncrack = false;
     public int team;
     public int facing = 0;
 
@@ -53,16 +52,16 @@ public class Player extends Object
                 switch(facing)
                 {
                     case 0:
-                        gp.drawImage(playerblue.get(0), getScreenX(), getScreenY());
+                        gp.drawImage(playerblue.get(0), getScreenX()+ 10, getScreenY()-12);
                         break;
                     case 1:
-                        gp.drawImage(playerblue.get(1), getScreenX(), getScreenY());
+                        gp.drawImage(playerblue.get(1), getScreenX()+ 10, getScreenY()-12);
                         break;
                     case 2:
-                        gp.drawImage(playerblue.get(2), getScreenX(), getScreenY());
+                        gp.drawImage(playerblue.get(2), getScreenX()+ 10, getScreenY()-12);
                         break;
                     case 3:
-                        gp.drawImage(playerblue.get(3), getScreenX(), getScreenY());
+                        gp.drawImage(playerblue.get(3), getScreenX()+ 10, getScreenY()-12);
                         break;
                 }
             }
@@ -71,32 +70,35 @@ public class Player extends Object
                 switch(facing)
                 {
                     case 0:
-                        gp.drawImage(playerred.get(0), getScreenX(), getScreenY());
+                        gp.drawImage(playerred.get(0), getScreenX() + 10, getScreenY()- 12);
                         break;
                     case 1:
-                        gp.drawImage(playerred.get(1), getScreenX(), getScreenY());
+                        gp.drawImage(playerred.get(1), getScreenX()+ 10, getScreenY()- 12);
                         break;
                     case 2:
-                        gp.drawImage(playerred.get(2), getScreenX(), getScreenY());
+                        gp.drawImage(playerred.get(2), getScreenX()+ 10, getScreenY()- 12);
                         break;
                     case 3:
-                        gp.drawImage(playerred.get(3), getScreenX(), getScreenY());
+                        gp.drawImage(playerred.get(3), getScreenX()+ 10, getScreenY()- 12);
                         break;
                 }
             }
         }
 
-        gp.setFont(new Font(20));
+        if(!hideplayer)
+        {
+            gp.setFont(new Font(20));
 
-        if(team == 0)
-        {
-            gp.strokeText("Player1", getScreenX() -10, getScreenY() -5);
-            gp.fillText("Player1", getScreenX() -10, getScreenY() -5);
-        }
-        else
-        {
-            gp.strokeText("Player2", getScreenX() -10, getScreenY() -5);
-            gp.fillText("Player2", getScreenX() -10, getScreenY() -5);
+            if(team == 0)
+            {
+                gp.strokeText("Player1", getScreenX(), getScreenY() -5);
+                gp.fillText("Player1", getScreenX(), getScreenY() -5);
+            }
+            else
+            {
+                gp.strokeText("Player2", getScreenX(), getScreenY() -5);
+                gp.fillText("Player2", getScreenX(), getScreenY() -5);
+            }
         }
     }
 
@@ -138,7 +140,7 @@ public class Player extends Object
                 
                 if(currentboom < boomlevel) currentboom++;
             }
-        }, 2500, TimeUnit.MILLISECONDS);
+        }, 3200, TimeUnit.MILLISECONDS);
 
         level.playerPlantBoom(Pos,getpower());
     
@@ -160,8 +162,6 @@ public class Player extends Object
                 break;
             case BOOT:
                 bootlevel--;
-                break;
-            case ENERGYDRINK:
                 break;
             case VILE:
                 powerlevel--;
@@ -188,23 +188,6 @@ public class Player extends Object
                 break;
             case BOOT:
                 bootlevel++;
-                break;
-            case ENERGYDRINK:
-                if(oncrack == false)
-                {
-                    bootlevel += 2;
-                    powerlevel += 2;
-                    BackGroundExacutor.Scheduler.schedule(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            
-                            oncrack = true;
-                            bootlevel -= 2;
-                            powerlevel -= 2;
-                        }
-                    }, 5000, TimeUnit.MILLISECONDS);
-                }
                 break;
             case VILE:
                 powerlevel++;

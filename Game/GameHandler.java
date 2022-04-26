@@ -3,12 +3,17 @@ package Game;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.text.rtf.RTFEditorKit;
+
 import Game.GameObject.*;
+import javafx.animation.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -31,7 +36,9 @@ public class GameHandler extends Parent implements Runnable {
 
     boolean running = false;
     GraphicsContext gp;
+    GraphicsContext gptext;
     Canvas canvas;
+    Canvas textcanvas;
 
     ControlHandler controlHandler;
     int Timer;
@@ -40,10 +47,15 @@ public class GameHandler extends Parent implements Runnable {
     boolean GameOverAnimation;
     boolean TimerAnimation;
     
-    Image imageGS;
-    Image imageGO;
-    Image imageUI;
-    Image imageBoarder;
+    ImageView imageGS;
+    ImageView imageGO;
+    ImageView player1score;
+    ImageView player2score;
+    ImageView imageUI;
+    ImageView scorePanel;
+
+    Button btnRetry;
+
     ArrayList<Player> playerList = new ArrayList<Player>();
     int i;
 
@@ -52,12 +64,31 @@ public class GameHandler extends Parent implements Runnable {
         //set up canvas side
         scene = new Scene(this,Color.GREENYELLOW);
         canvas = new Canvas(screenWidth,screenHight);
-        this.getChildren().add(canvas);
+        textcanvas = new Canvas(screenWidth,screenHight);
 
-        imageGS = new Image(getClass().getResourceAsStream("/Game/Asset/UI/GameStart.png"));
-        imageGO = new Image(getClass().getResourceAsStream("/Game/Asset/UI/GameOver.png"));
-        imageBoarder =  new Image(getClass().getResourceAsStream("/Game/Asset/UI/boarder_02.png"));
-        imageUI =  new Image(getClass().getResourceAsStream("/Game/Asset/UI/TimerUI.png"));
+        imageGS = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/GameStart.png")));
+        imageGO = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/GameOver.png")));
+        scorePanel = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/panel.png")));
+        imageUI = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/TimerUI.png")));
+        player1score = new ImageView( new Image(getClass().getResourceAsStream("/Game/Asset/UI/player1score.png")));
+        player2score = new ImageView( new Image(getClass().getResourceAsStream("/Game/Asset/UI/player2score.png")));
+
+        //layer
+        this.getChildren().add(canvas);
+        this.getChildren().add(imageGS);
+        imageGS.setVisible(false);
+        this.getChildren().add(imageGO);
+        imageGO.setVisible(false);
+        this.getChildren().add(scorePanel);
+        scorePanel.setVisible(false);
+        this.getChildren().add(imageUI);
+        imageUI.setVisible(false);
+        this.getChildren().add(player1score);
+        player1score.setVisible(false);
+        this.getChildren().add(player2score);
+        player2score.setVisible(false);
+        this.getChildren().add(textcanvas);
+
         gamerunning = true;
         GameStartAnimation = false;
         GameOverAnimation = false;
@@ -67,7 +98,7 @@ public class GameHandler extends Parent implements Runnable {
 
         //set up update and draw and thread need to be last
         gp = canvas.getGraphicsContext2D();
-
+        gptext = textcanvas.getGraphicsContext2D();
         new Thread(this).start();
 
         BackGroundExacutor.Scheduler.scheduleAtFixedRate(new Runnable() {
@@ -104,45 +135,64 @@ public class GameHandler extends Parent implements Runnable {
     private void Draw() {
 
         gp.clearRect(0, 0,screenWidth, screenHight);
+        gptext.clearRect(0, 0, screenWidth, screenHight);
         level.draw(gp);
 
+        GameScore();
         if(GameStartAnimation) GameStartAnimation();
         if(GameOverAnimation)  GameOverAnimation();
         if(TimerAnimation) TimerAnimation();
 
     }
 
+    private void GameScore()
+    {
+        
+        gptext.setFont(new Font(20));
+        gptext.strokeText( playerList.get(0).score + "", 50, 54);
+        gptext.fillText(playerList.get(0).score + "", 50, 54);
+
+        gptext.strokeText( playerList.get(1).score + "", screenWidth - player2score.getImage().getHeight() + 50,54);
+        gptext.fillText(playerList.get(1).score + "", screenWidth - player2score.getImage().getHeight() + 50,54);
+    }
+
     private void GameStartAnimation()
     {
-        gp.setFont(new Font(80));
+        gptext.setFont(new Font(80));
         switch(i)
         {
             case 1:
             case 2:
             case 3:
-                gp.strokeText( i + "" , 500, screenHight/2);
-                gp.fillText( i + "" , 500, screenHight/2);
+                gptext.strokeText( i + "" , 500, screenHight/2);
+                gptext.fillText( i + "" , 500, screenHight/2);
                 break;
-            
+            case 0:
+                imageGS.setVisible(true);
+        
             default:
-                case 0:
-                gp.drawImage(imageGS,screenWidth/2 - imageGS.getWidth()/2 +64,screenHight/2- imageGS.getHeight()/2);
+                case -1:
+                imageGS.setVisible(false);
                 break;
         } 
     }
 
     private void GameOverAnimation()
     {
-        gp.drawImage(imageGO,screenWidth/2 - imageGO.getWidth()/2 +32,screenHight/2- imageGO.getHeight()/2);
+
+        
     }
     
     private void TimerAnimation()
     {
-
-        gp.drawImage(imageUI,screenWidth/2 - 32 , 0);
-        gp.setFont(Font.font(30));
-        gp.strokeText( Timer + "" , screenWidth/2 + 36 , 36);
-        gp.fillText( Timer + "" , screenWidth/2 + 36, 36);
+        if(Timer <= 60)
+        {
+            gptext.setFill(Color.RED);
+        }
+        
+        gptext.setFont(Font.font(30));
+        gptext.strokeText( Timer + "" , screenWidth/2 + 36 , 36);
+        gptext.fillText( Timer + "" , screenWidth/2 + 36, 36);
     }
 
     private void Update() {
@@ -169,6 +219,7 @@ public class GameHandler extends Parent implements Runnable {
             {
                 GameStartAnimation = false;
                 TimerAnimation = true;
+                imageUI.setVisible(true);
                 gamerunning = true;
                 
             }
@@ -184,6 +235,7 @@ public class GameHandler extends Parent implements Runnable {
 
     private void EndGame()
     {
+        i = 0;
         gamerunning = false;
         TimerAnimation = false;
         GameOverAnimation = true;
@@ -210,6 +262,19 @@ public class GameHandler extends Parent implements Runnable {
         scene.setOnKeyPressed(controlHandler);
         controlHandler.level = level;
     
-        Timer = 180;
+        imageGS.setLayoutX(screenWidth/2 - imageGS.getImage().getWidth()/2 +64);
+        imageGS.setLayoutY(screenHight/2- imageGS.getImage().getHeight()/2);
+        imageUI.setLayoutX(screenWidth/2 - 32 );
+        imageUI.setLayoutY(0);
+        player1score.setLayoutX(0);
+        player1score.setLayoutY(0);
+        player2score.setLayoutX(screenWidth - player2score.getImage().getWidth());
+        player2score.setLayoutY(0);
+
+        player1score.setVisible(true);
+        player2score.setVisible(true);
+        
+
+        Timer = 20;
     }
 }

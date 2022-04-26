@@ -25,19 +25,34 @@ public class ControlHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent event) {
 
-       
+        if(!player1.hideplayer) 
+        {
+            if(event.getCode() == KeyCode.SPACE)
+            {                 
+                player1.playerPlantBoom();
+            }
+        }
+
+        if(!player2.hideplayer) 
+        {
+            if(event.getCode() == KeyCode.ENTER)
+            {                 
+                player2.playerPlantBoom();
+            }
+        }
+        
         switch(event.getCode())
         {
             case W:
                 if(isMoving1 || player1.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player1.Pos.top != null)
                 {
                     if(player1.Pos.top.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player1.Pos.top)) return;
+                        if(level.checkBoomPos(player1.Pos.top)) break;
                         targetPos1 = player1.Pos.top;
                         player1.facing = 0;
                         Move1();
@@ -49,13 +64,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             case S:
                 if(isMoving1 || player1.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player1.Pos.down != null)
                 {
                     if(player1.Pos.down.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player1.Pos.down)) return;
+                        if(level.checkBoomPos(player1.Pos.down)) break;
                         targetPos1 = player1.Pos.down;
                         player1.facing = 1;
                         Move1();
@@ -67,13 +82,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             case A:
                 if(isMoving1 || player1.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player1.Pos.left != null)
                 {
                     if(player1.Pos.left.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player1.Pos.left)) return;
+                        if(level.checkBoomPos(player1.Pos.left)) break;
                         targetPos1 = player1.Pos.left;
                         player1.facing = 2;
                         Move1();
@@ -86,13 +101,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             
                 if(isMoving1 || player1.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player1.Pos.right != null)
                 {
                     if(player1.Pos.right.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player1.Pos.right)) return;
+                        if(level.checkBoomPos(player1.Pos.right)) break;
                         targetPos1 = player1.Pos.right;
                         player1.facing = 3;
                         Move1();
@@ -105,13 +120,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
                 case UP:
                 if(isMoving2 || player2.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player2.Pos.top != null)
                 {
                     if(player2.Pos.top.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player2.Pos.top)) return;
+                        if(level.checkBoomPos(player2.Pos.top)) break;
                         targetPos2 = player2.Pos.top;
                         player2.facing = 0;
                         Move2();
@@ -123,13 +138,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             case DOWN:
                 if(isMoving2 || player2.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player2.Pos.down != null)
                 {
                     if(player2.Pos.down.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player2.Pos.down)) return;
+                        if(level.checkBoomPos(player2.Pos.down)) break;
                         targetPos2 = player2.Pos.down;
                         player2.facing = 1;
                         Move2();
@@ -141,13 +156,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             case LEFT:
                 if(isMoving2 || player2.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player2.Pos.left != null)
                 {
                     if(player2.Pos.left.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player2.Pos.left)) return;
+                        if(level.checkBoomPos(player2.Pos.left)) break;
                         targetPos2 = player2.Pos.left;
                         player2.facing = 2;
                         Move2();
@@ -160,13 +175,13 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             
                 if(isMoving2 || player2.hideplayer)
                 {
-                    return;
+                    break;
                 }
                 if(player2.Pos.right != null)
                 {
                     if(player2.Pos.right.bType == blockTypes.NONE)
                     {
-                        if(level.checkBoomPos(player2.Pos.right)) return;
+                        if(level.checkBoomPos(player2.Pos.right)) break;
                         targetPos2 = player2.Pos.right;
                         player2.facing = 3;
                         Move2();
@@ -177,19 +192,6 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             default:
                 break;
         } 
-
-        if(event.getCode() == KeyCode.SPACE)
-        {
-            
-            if(isMoving1 || player1.hideplayer) return;
-            player1.playerPlantBoom();
-        }
-
-        if(event.getCode() == KeyCode.ENTER)
-        {
-            if(isMoving2 || player2.hideplayer) return;
-            player2.playerPlantBoom();
-        }
     }
 
 
@@ -203,7 +205,8 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             player1.setWorldY(player1.getWorldY() + moveY1);
             if(player1.getWorldX() == targetPos1.getWorldX() && player1.getWorldY() == targetPos1.getWorldY())
             {
-                isMoving1 = false;      
+                isMoving1 = false;  
+                player1.Pos = targetPos1;    
                 Item item = level.itemCheck(targetPos1);
                 if(item != null)
                 {
@@ -223,6 +226,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             if(player2.getWorldX() == targetPos2.getWorldX() && player2.getWorldY() == targetPos2.getWorldY())
             {
                 isMoving2 = false;      
+                player2.Pos = targetPos2;
                 Item item = level.itemCheck(targetPos2);
                 if(item != null)
                 {
@@ -242,7 +246,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
         moveX1 = dx / player1.getSpeed();
         moveY1 = dy / player1.getSpeed();
         isMoving1 = true;  
-        player1.Pos = targetPos1;
+        
     }
 
     public void Move2()
@@ -253,6 +257,6 @@ public class ControlHandler implements EventHandler<KeyEvent> {
         moveX2 = dx / player2.getSpeed();
         moveY2 = dy / player2.getSpeed();
         isMoving2 = true;  
-        player2.Pos = targetPos2;
+        
     }
 }

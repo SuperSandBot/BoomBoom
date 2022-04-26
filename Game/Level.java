@@ -1,6 +1,7 @@
 package Game;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 import Game.GameObject.*;
@@ -21,9 +22,9 @@ public class Level extends Object{
     Map map;
     Block[][] blocks;
     ArrayList<Player> playerlist;
-    ArrayList<Boom> Booms = new ArrayList<Boom>();
-    ArrayList<BoomSplase> boomSplases = new ArrayList<BoomSplase>();
-    ArrayList<Item> items = new ArrayList<Item>();
+    LinkedList<Boom> Booms = new LinkedList<Boom>();
+    LinkedList<BoomSplase> boomSplases = new LinkedList<BoomSplase>();
+    LinkedList<Item> items = new LinkedList<Item>();
 
     ArrayList<Block> SpawnPoint = new ArrayList<Block>();
    
@@ -49,20 +50,25 @@ public class Level extends Object{
             }
         }
         
-        for (Item item : items) {
-            if(item != null) item.draw(gp);
+        if(items.size() > 0)
+        {
+            for (Item item : items) {
+                if(item != null) item.draw(gp);
+            }
         }
 
         if(boomSplases.size() > 0)
         {
-            for(BoomSplase splase : boomSplases)
-            {
+            for(BoomSplase splase : boomSplases) {
                 splase.draw(gp);
             }
         }
 
-        for (Boom boom : Booms) {
-            if(boom != null)  boom.draw(gp);
+        if(Booms.size() > 0)
+        {
+            for (Boom boom : Booms) {
+                if(boom != null)  boom.draw(gp);
+            }
         }
   
         for (Player player : playerlist) {
@@ -100,15 +106,6 @@ public class Level extends Object{
         {
             for (Boom boom : Booms) {
                 if(boom != null) boom.update();
-            }
-        }
-
-        if(!boomSplases.isEmpty())
-        {
-            for (BoomSplase splase : boomSplases)
-            {
-                if(splase != null)
-                splase.update();
             }
         }
 
@@ -150,7 +147,6 @@ public class Level extends Object{
             @Override
             public void run() {
                 Block ramdomspawn = SpawnPoint.get(BackGroundExacutor.randomnum.nextInt(2));
-                System.out.println(ramdomspawn);
                 player.setWorldX(ramdomspawn.getWorldX());
                 player.setWorldY(ramdomspawn.getWorldY());
                 player.setScreenX(ramdomspawn.getScreenX());
@@ -185,6 +181,8 @@ public class Level extends Object{
         //Top
         BoomSplase[] splasesTop = new BoomSplase[boom.power + 1];
         splasesTop[0] = new BoomSplase(boom.pos,"top",false);
+        splasesTop[0].setScreenX(boom.pos.getScreenX());
+        splasesTop[0].setScreenY(boom.pos.getScreenY());
         boomSplases.add(splasesTop[0]);
         if( playerCheck(splasesTop[0].pos) != null) RespawnPlayer(playerCheck(splasesTop[0].pos)); 
         for(int i = 1;i < splasesTop.length ; i++)
@@ -194,6 +192,8 @@ public class Level extends Object{
                 if(splasesTop[i-1].pos.top.bType == blockTypes.NONE)
                 {
                     splasesTop[i] = new BoomSplase(splasesTop[i - 1].pos.top, "top", false);
+                    splasesTop[i].setScreenX(splasesTop[i - 1].pos.top.getScreenX());
+                    splasesTop[i].setScreenY(splasesTop[i - 1].pos.top.getScreenY());
                     boomSplases.add(splasesTop[i]);
                     if(i+1 >= splasesTop.length) splasesTop[i].End = true;
 
@@ -231,6 +231,8 @@ public class Level extends Object{
                 if(splasesDown[i-1].pos.down.bType == blockTypes.NONE)
                 {
                     splasesDown[i] = new BoomSplase(splasesDown[i-1].pos.down, "down", false);
+                    splasesDown[i].setScreenX(splasesDown[i - 1].pos.down.getScreenX());
+                    splasesDown[i].setScreenY(splasesDown[i - 1].pos.down.getScreenY());
                     boomSplases.add(splasesDown[i]);
                     if(i+1 >= splasesDown.length) splasesDown[i].End = true;
                     boomCheck(splasesDown[i].pos);
@@ -264,6 +266,8 @@ public class Level extends Object{
                 if(splasesLeft[i-1].pos.left.bType == blockTypes.NONE)
                 {
                     splasesLeft[i] = new BoomSplase(splasesLeft[i-1].pos.left, "left", false);
+                    splasesLeft[i].setScreenX(splasesLeft[i - 1].pos.left.getScreenX());
+                    splasesLeft[i].setScreenY(splasesLeft[i - 1].pos.left.getScreenY());
                     boomSplases.add(splasesLeft[i]);
                     if(i+1 >= splasesLeft.length) splasesLeft[i].End = true;
                     boomCheck(splasesLeft[i].pos); 
@@ -297,6 +301,8 @@ public class Level extends Object{
                 if(splasesRight[i-1].pos.right.bType == blockTypes.NONE)
                 {
                     splasesRight[i] = new BoomSplase(splasesRight[i-1].pos.right, "right", false);
+                    splasesRight[i].setScreenX(splasesRight[i - 1].pos.right.getScreenX());
+                    splasesRight[i].setScreenY(splasesRight[i - 1].pos.right.getScreenY());
                     boomSplases.add(splasesRight[i]);
                     if(i+1 >= splasesRight.length) splasesRight[i].End = true;
                     boomCheck(splasesRight[i].pos);  
@@ -368,7 +374,7 @@ public class Level extends Object{
     {
         if(BackGroundExacutor.randomnum.nextInt(10) < 6)
         {
-            switch(BackGroundExacutor.randomnum.nextInt(8))
+            switch(BackGroundExacutor.randomnum.nextInt(7))
             {
                 case 0:
                 case 1:
@@ -380,9 +386,7 @@ public class Level extends Object{
                 case 5:
                     return itemTypes.BOOT;
                 case 6:
-                    return itemTypes.ENERGYDRINK;
                 case 7:
-                case 8:
                     return itemTypes.VILE;
                 default:
                     break;
