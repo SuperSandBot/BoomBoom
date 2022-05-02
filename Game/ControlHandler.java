@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 
 public class ControlHandler implements EventHandler<KeyEvent> {
 
+    public boolean control = true;
     public Player player1;
     public Player player2;
     public Level level;
@@ -25,6 +26,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent event) {
 
+        if(!control) return;
         if(!player1.hideplayer) 
         {
             if(event.getCode() == KeyCode.SPACE)
@@ -206,7 +208,7 @@ public class ControlHandler implements EventHandler<KeyEvent> {
             if(player1.getWorldX() == targetPos1.getWorldX() && player1.getWorldY() == targetPos1.getWorldY())
             {
                 isMoving1 = false;  
-                player1.Pos = targetPos1;    
+                player1.Pos = targetPos1;
                 Item item = level.itemCheck(targetPos1);
                 if(item != null)
                 {

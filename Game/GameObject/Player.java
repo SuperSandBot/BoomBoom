@@ -102,11 +102,6 @@ public class Player extends Object
         }
     }
 
-    public void update() 
-    {
-        
-    }
-
     public int getSpeed()
     {
         
@@ -140,7 +135,7 @@ public class Player extends Object
                 
                 if(currentboom < boomlevel) currentboom++;
             }
-        }, 3200, TimeUnit.MILLISECONDS);
+        }, 3700, TimeUnit.MILLISECONDS);
 
         level.playerPlantBoom(Pos,getpower());
     

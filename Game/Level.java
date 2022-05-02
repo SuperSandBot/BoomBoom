@@ -81,27 +81,6 @@ public class Level extends Object{
     public void update()
     {   
 
-        for (Player player : playerlist) {
-            player.update();
-        }
-
-        // xác định vị trí block trên màng hình
-        int x = 0;
-        int y = 0;
-
-        for(int i = 0; i < blocks.length; i++)
-        {
-            for(int j = 0; j < blocks[0].length; j++)
-            {
-                blocks[i][j].setScreenX(this.getScreenX() + x + 96);
-                blocks[i][j].setScreenY(this.getScreenY() + y + 64);
-                blocks[i][j].update();
-                y += 64;
-            }
-            x += 64;
-            y = 0;
-        }
-
         if(!Booms.isEmpty())
         {
             for (Boom boom : Booms) {
@@ -109,13 +88,13 @@ public class Level extends Object{
             }
         }
 
-        for (Item item : items) {
-            if(item != null)
-            item.update();
+        if(!items.isEmpty())
+        {
+            for (Item item : items) {
+                if(item != null) item.update();
+            }
         }
-
-        //this.setScreenX(getWorldX() - playerlist.get(0).getWorldX() + playerlist.get(0).getScreenX());
-        //this.setScreenY(getWorldY() - playerlist.get(0).getWorldY() + playerlist.get(0).getScreenY());
+        
     }
 
     public void Tic() {
@@ -447,7 +426,6 @@ public class Level extends Object{
 
     public void setupLevel()
     {
-
         blocks = new Block[map.Row][map.Col];
         int[][] blockMap = map.blockMap;
         int x = 0;
