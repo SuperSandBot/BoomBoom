@@ -22,20 +22,20 @@ public class BoomSplase extends Object {
         switch(dir)
             {
                 case "top":
-                    imageEnd = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashEndTop.png"));
-                    imageBody = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashBodyVertical.png"));
+                    imageEnd = ImageManeger.getSplashEnd(dir);
+                    imageBody = ImageManeger.getSplashBodyVertical();
                     break;
                 case "down":
-                    imageEnd = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashEndDown.png"));
-                    imageBody = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashBodyVertical.png"));
+                    imageEnd = ImageManeger.getSplashEnd(dir);
+                    imageBody = ImageManeger.getSplashBodyVertical();
                     break;
                 case "left":
-                    imageEnd = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashEndLeft.png"));
-                    imageBody = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashBodyHorizontal.png"));
+                    imageEnd = ImageManeger.getSplashEnd(dir);
+                    imageBody = ImageManeger.getSplashBodyHorizontal();
                     break;
                 case "right":  
-                    imageEnd = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashEndRight.png"));
-                    imageBody = new Image(getClass().getResourceAsStream("/Game/Asset/Boom/splashBodyHorizontal.png"));
+                    imageEnd = ImageManeger.getSplashEnd(dir);
+                    imageBody = ImageManeger.getSplashBodyHorizontal();
                     break;
             }    
     }

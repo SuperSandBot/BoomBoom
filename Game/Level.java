@@ -10,6 +10,7 @@ import Game.GameObject.Block.blockTypes;
 import Game.GameObject.Item.itemTypes;
 import Game.Sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class Level extends Object{
     
@@ -41,6 +42,7 @@ public class Level extends Object{
     public void draw(GraphicsContext gp)
     {
         map.draw(gp);
+       
 
         for(int i = 0; i < blocks.length; i++)
         {
@@ -70,12 +72,11 @@ public class Level extends Object{
                 if(boom != null)  boom.draw(gp);
             }
         }
-  
         for (Player player : playerlist) {
             player.draw(gp);
         }
 
-
+        
     }
 
     public void update()
@@ -93,6 +94,10 @@ public class Level extends Object{
             for (Item item : items) {
                 if(item != null) item.update();
             }
+        }
+
+        for (Player player : playerlist) {
+            player.update();
         }
         
     }
@@ -168,7 +173,7 @@ public class Level extends Object{
         {
             if(splasesTop[i-1].pos.top != null)
             {
-                if(splasesTop[i-1].pos.top.bType == blockTypes.NONE)
+                if(splasesTop[i-1].pos.top.bTypes == blockTypes.NONE)
                 {
                     splasesTop[i] = new BoomSplase(splasesTop[i - 1].pos.top, "top", false);
                     splasesTop[i].setScreenX(splasesTop[i - 1].pos.top.getScreenX());
@@ -207,7 +212,7 @@ public class Level extends Object{
         {
             if(splasesDown[i-1].pos.down != null)
             {
-                if(splasesDown[i-1].pos.down.bType == blockTypes.NONE)
+                if(splasesDown[i-1].pos.down.bTypes == blockTypes.NONE)
                 {
                     splasesDown[i] = new BoomSplase(splasesDown[i-1].pos.down, "down", false);
                     splasesDown[i].setScreenX(splasesDown[i - 1].pos.down.getScreenX());
@@ -242,7 +247,7 @@ public class Level extends Object{
         {
             if(splasesLeft[i-1].pos.left != null)
             {
-                if(splasesLeft[i-1].pos.left.bType == blockTypes.NONE)
+                if(splasesLeft[i-1].pos.left.bTypes == blockTypes.NONE)
                 {
                     splasesLeft[i] = new BoomSplase(splasesLeft[i-1].pos.left, "left", false);
                     splasesLeft[i].setScreenX(splasesLeft[i - 1].pos.left.getScreenX());
@@ -277,7 +282,7 @@ public class Level extends Object{
         {
             if(splasesRight[i-1].pos.right != null)
             {
-                if(splasesRight[i-1].pos.right.bType == blockTypes.NONE)
+                if(splasesRight[i-1].pos.right.bTypes == blockTypes.NONE)
                 {
                     splasesRight[i] = new BoomSplase(splasesRight[i-1].pos.right, "right", false);
                     splasesRight[i].setScreenX(splasesRight[i - 1].pos.right.getScreenX());
@@ -335,7 +340,7 @@ public class Level extends Object{
         while(checking)
         {
             block = blocks[BackGroundExacutor.randomnum.nextInt(blocks.length)][BackGroundExacutor.randomnum.nextInt(blocks[0].length)];
-            if(block.bType == blockTypes.NONE)
+            if(block.bTypes == blockTypes.NONE)
             {
                 if(itemCheck(block) == null)
                 {
@@ -397,12 +402,44 @@ public class Level extends Object{
     
     private void BlockCheck(Block block)
     {
-        if(block.bType == blockTypes.STONEBLOCK) return;
-        if(block.bType != blockTypes.NONE)
+        if(block.bTypes == blockTypes.STONEBLOCK) return;
+        if(block.bTypes != blockTypes.NONE)
         {
-            block.bType = blockTypes.NONE;
+            block.bTypes = blockTypes.NONE;
             itemSpawn(RamdomItem(),block);
         }
+    }
+
+    public boolean playerTouchBlock(Player player, Block block)
+    {
+        if(player.playerHitBox.intersects(block.getScreenX() , block.getScreenY(), block.width +2, block.height+2))
+        {
+            for (Boom boom : Booms) {
+                if(block.getScreenX() == boom.getScreenX() && block.getScreenY() == boom.getScreenY())  return false; 
+            }  
+
+            if(block.bTypes != blockTypes.NONE)
+            {
+                return false; 
+            }
+        }
+        
+        return true;
+    }
+
+    public boolean playerTouchMap(Player player)
+    {
+
+        if(player.playerHitBox.intersects(map.getScreenX() +32 , map.getScreenY() + 32, map.Width - 60, map.Hight-125))
+        {  
+            return true; 
+        }
+        return false;
+    }
+
+    public int distance(Player player, Block pos)
+    {
+        return (int) Math.sqrt(Math.pow( pos.getWorldX() - player.getWorldX(), 2) + Math.pow(pos.getWorldY() - player.getWorldY(), 2));
     }
 
     private void boomCheck(Block pos)

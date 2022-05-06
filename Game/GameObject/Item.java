@@ -32,25 +32,8 @@ public class Item extends Object{
     public void setBType(itemTypes iTypes)
     {
         this.iTypes = iTypes;
-
-        switch (iTypes)
-            {
-                case GOLDCOIN:
-                    itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/goldcoin.png"));
-                    break;
-                case BOOMUPGRADE:
-                    itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/boomupgrade.png"));
-                    break;
-                case BOOT:
-                    itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/boot.png"));
-                    break;
-                case VILE:
-                    itemImage = new Image(getClass().getResourceAsStream("/Game/Asset/Item/vile.png"));
-                    break;
-                default:   
-                    itemImage = null;
-                    break; 
-            }
+        this.itemImage = ImageManeger.getItemImage(iTypes);
+        this.itemShadow = ImageManeger.getShadow();
     }
 
     public void draw(GraphicsContext gp)

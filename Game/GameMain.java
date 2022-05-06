@@ -9,19 +9,18 @@ public class GameMain extends Application {
     final int screenWidth = 1024;
     final int screenHight = 768;
     
-    Stage gameStage;
+    public Stage gameStage;
     Scene scene;
     GameHandler gameHandler;
-    MainMenu mainMenu;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        mainMenu = new MainMenu();
+        MainMenu mainMenu = new MainMenu();
         mainMenu.setup();
         mainMenu.gameMain = this;
         mainMenu.screenWidth = this.screenWidth;
-        mainMenu.screenHight = this.screenHight;
+        mainMenu.screenHeight = this.screenHight;
         gameStage = primaryStage;
 
         gameStage.setTitle("BoomBoom");

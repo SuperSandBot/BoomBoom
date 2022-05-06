@@ -7,6 +7,7 @@ import Game.BackGroundExacutor;
 import Game.Level;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 public class Player extends Object
@@ -21,6 +22,8 @@ public class Player extends Object
     public boolean hideplayer = false;
     public int team;
     public int facing = 0;
+    public int width,height;
+    public Rectangle playerHitBox;
 
     public ArrayList<Item> playerItem = new ArrayList<Item>();
     ArrayList<Image> playerblue = new ArrayList<Image>();
@@ -41,6 +44,19 @@ public class Player extends Object
         playerred.add(new Image(getClass().getResourceAsStream("/Game/Asset/Player/playerright_red.png")));
 
         currentboom = boomlevel;
+
+        width = (int)playerblue.get(0).getWidth();
+        height = (int) playerblue.get(0).getHeight();
+        playerHitBox = new Rectangle();
+        
+    }
+
+    public void update()
+    {
+        playerHitBox.setX(getScreenX() +20);
+        playerHitBox.setY(getScreenY() + height - 50);
+        playerHitBox.setWidth(width -20);
+        playerHitBox.setHeight(45);
     }
 
     public void draw(GraphicsContext gp) 
@@ -108,12 +124,14 @@ public class Player extends Object
         switch(bootlevel)
         {
             case 1:
-                return 16;
+                return 6;
             case 2:
                 return 8;
+            case 3:
+                return 9;
             default:
-                case 3:
-                return 4;
+                case 4:
+                return 10;
         }
     }
 

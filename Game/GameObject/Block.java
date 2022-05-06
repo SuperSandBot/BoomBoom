@@ -16,46 +16,32 @@ public class Block extends Object {
 
     Image blockImage;
 
-    public blockTypes bType;
+    public blockTypes bTypes;
     public Block top, down, left, right;
+    public int width,height;
 
     public Block()
     {
         super();
+        width = 64;
+        height = 64;
     }
 
     public Block(int worldX, int worldY, int screenX, int screenY) {
         super(worldX, worldY, screenX, screenY);
+        width = 64;
+        height = 64;
     }
 
-    public void setBType(blockTypes bType)
+    public void setBType(blockTypes bTypes)
     {
-        this.bType = bType;
-
-        switch (bType)
-            {
-                case DIRTBLOCK00:
-                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/DirtBlock00.png"));
-                    break;
-                case DIRTBLOCK01:
-                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/DirtBlock01.png"));
-                    break;
-                case GRASSBLOCK:
-                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/grassblock.png"));
-                    break;
-                case STONEBLOCK:
-                    blockImage = new Image(getClass().getResourceAsStream("/Game/Asset/Block/stone.png"));
-                    break;
-                default:
-                    case NONE:
-                    blockImage = null;
-                    break; 
-            }
+        this.bTypes = bTypes;
+        blockImage = ImageManeger.getBlockImage(bTypes);
     }
 
     public void draw(GraphicsContext gp)
     {
-        if(bType != blockTypes.NONE)
+        if(bTypes != blockTypes.NONE)
         {
             gp.drawImage(blockImage, getScreenX(), getScreenY()- 32 );
         }

@@ -24,12 +24,6 @@ public class Map extends Object {
         this.Hight = (int) image.getHeight();
 
     }
-    
-    public Map(int worldX, int worldY, int screenX, int screenY) {
-        super(worldX, worldY, screenX, screenY);
-
-        image = new Image(getClass().getResourceAsStream("/Game/Asset/Map/lanepanel.png"));
-    }
 
     private void LoadMap(String file)
     {

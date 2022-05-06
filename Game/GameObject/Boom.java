@@ -14,19 +14,12 @@ public class Boom extends Object{
     public int expoldeTic = 0;
     public Block pos;
     public boolean explode = false;
+    public int width,height;
 
     public Boom(int worldX, int worldY, int screenX, int screenY) {
         super(worldX, worldY, screenX, screenY);
 
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom00.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom01.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom02.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom03.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom04.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom05.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom06.png")));
-        boomImage.add(new Image(getClass().getResourceAsStream("/Game/Asset/Boom/boom07.png")));
-
+        boomImage = ImageManeger.getBoomImage();
     }
 
     public void draw(GraphicsContext gp)

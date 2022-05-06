@@ -1,264 +1,386 @@
 package Game;
 
-import Game.GameObject.Block;
 import Game.GameObject.Item;
 import Game.GameObject.Player;
-import Game.GameObject.Block.blockTypes;
 import Game.Sound.GameSound;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class ControlHandler implements EventHandler<KeyEvent> {
+public class ControlHandler{
 
+    public boolean gamepause = false;
     public boolean control = true;
     public Player player1;
     public Player player2;
+    public GameHandler gameHandler;
     public Level level;
-    private boolean isMoving1= false;
-    private boolean isMoving2= false;
-    private int moveX1,moveY1;
-    private int moveX2,moveY2;
-    private Block targetPos1;
-    private Block targetPos2;
+    public Scene scene;
+    boolean ismovingup1 = false;
+    boolean ismovingdown1 = false;
+    boolean ismovingleft1 = false;
+    boolean ismovingright1 = false;
+
+    boolean ismovingup2 = false;
+    boolean ismovingdown2 = false;
+    boolean ismovingleft2 = false;
+    boolean ismovingright2 = false;
+
     GameSound gs = new GameSound();
 
-    @Override
-    public void handle(KeyEvent event) {
-
-        if(!control) return;
-        if(!player1.hideplayer) 
-        {
-            if(event.getCode() == KeyCode.SPACE)
-            {                 
-                player1.playerPlantBoom();
-            }
-        }
-
-        if(!player2.hideplayer) 
-        {
-            if(event.getCode() == KeyCode.ENTER)
-            {                 
-                player2.playerPlantBoom();
-            }
-        }
+    public ControlHandler(Scene scene)
+    {
+        this.scene = scene;
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
         
-        switch(event.getCode())
-        {
-            case W:
-                if(isMoving1 || player1.hideplayer)
+                if(!control) return;
+                if(event.getCode() == KeyCode.ESCAPE)
                 {
-                    break;
+                    gamepause = !gamepause;
+                    gameHandler.pauseGame(gamepause);
                 }
-                if(player1.Pos.top != null)
+        
+                ///player 1 controller
+                Item item1 = level.itemCheck(player1.Pos);
+                if(item1 != null)
                 {
-                    if(player1.Pos.top.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player1.Pos.top)) break;
-                        targetPos1 = player1.Pos.top;
-                        player1.facing = 0;
-                        Move1();
-                        
-                    }
+                    player1.playerPickItem(item1); 
+                    gs.Audio(GameSound.ITEM);
+                    level.RemoveItem(item1);
                 }
-                break;
 
-            case S:
-                if(isMoving1 || player1.hideplayer)
+                if(!player1.hideplayer) 
                 {
-                    break;
-                }
-                if(player1.Pos.down != null)
-                {
-                    if(player1.Pos.down.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player1.Pos.down)) break;
-                        targetPos1 = player1.Pos.down;
-                        player1.facing = 1;
-                        Move1();
-                        
+                    if(event.getCode() == KeyCode.SPACE)
+                    {                 
+                        player1.playerPlantBoom();
                     }
                 }
-                break;
+        
+                if(event.getCode() == KeyCode.W)
+                {
+                    ismovingup1 = true;
+                }
+        
+                if(event.getCode() == KeyCode.S)
+                {
+                    ismovingdown1 = true;
+                }
+        
+                if(event.getCode() == KeyCode.A)
+                {
+                    ismovingleft1 = true;
+                }
                 
-            case A:
-                if(isMoving1 || player1.hideplayer)
+                if(event.getCode() == KeyCode.D)
                 {
-                    break;
+                    ismovingright1 = true;
                 }
-                if(player1.Pos.left != null)
-                {
-                    if(player1.Pos.left.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player1.Pos.left)) break;
-                        targetPos1 = player1.Pos.left;
-                        player1.facing = 2;
-                        Move1();
-                        
-                    }
-                }
-                break;  
+        
+                ////player2 
 
-            case D:
-            
-                if(isMoving1 || player1.hideplayer)
+                Item item2 = level.itemCheck(player2.Pos);
+                if(item2 != null)
                 {
-                    break;
+                    player2.playerPickItem(item2); 
+                    gs.Audio(GameSound.ITEM);
+                    level.RemoveItem(item2);
                 }
-                if(player1.Pos.right != null)
-                {
-                    if(player1.Pos.right.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player1.Pos.right)) break;
-                        targetPos1 = player1.Pos.right;
-                        player1.facing = 3;
-                        Move1();
-                        	
-                        
-                    }
-                }
-                break;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-                case UP:
-                if(isMoving2 || player2.hideplayer)
-                {
-                    break;
-                }
-                if(player2.Pos.top != null)
-                {
-                    if(player2.Pos.top.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player2.Pos.top)) break;
-                        targetPos2 = player2.Pos.top;
-                        player2.facing = 0;
-                        Move2();
-                        
-                    }
-                }
-                break;
 
-            case DOWN:
-                if(isMoving2 || player2.hideplayer)
+                if(!player2.hideplayer) 
                 {
-                    break;
-                }
-                if(player2.Pos.down != null)
-                {
-                    if(player2.Pos.down.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player2.Pos.down)) break;
-                        targetPos2 = player2.Pos.down;
-                        player2.facing = 1;
-                        Move2();
-                        
+                    if(event.getCode() == KeyCode.ENTER)
+                    {                 
+                        player2.playerPlantBoom();
                     }
                 }
-                break;
+        
+                if(event.getCode() == KeyCode.UP)
+                {
+                    ismovingup2 = true;
+                }
+        
+                if(event.getCode() == KeyCode.DOWN)
+                {
+                    ismovingdown2= true;
+                }
+        
+                if(event.getCode() == KeyCode.LEFT)
+                {
+                    ismovingleft2 = true;
+                }
                 
-            case LEFT:
-                if(isMoving2 || player2.hideplayer)
+                if(event.getCode() == KeyCode.RIGHT)
                 {
-                    break;
+                    ismovingright2 = true;
                 }
-                if(player2.Pos.left != null)
-                {
-                    if(player2.Pos.left.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player2.Pos.left)) break;
-                        targetPos2 = player2.Pos.left;
-                        player2.facing = 2;
-                        Move2();
-                        
-                    }
-                }
-                break;  
-
-            case RIGHT:
+            }
             
-                if(isMoving2 || player2.hideplayer)
+        });
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				if(!control) return;
+        
+                ///player 1 controller
+        
+                if(event.getCode() == KeyCode.W)
                 {
-                    break;
+                    ismovingup1 = false;
                 }
-                if(player2.Pos.right != null)
+        
+                if(event.getCode() == KeyCode.S)
                 {
-                    if(player2.Pos.right.bType == blockTypes.NONE)
-                    {
-                        if(level.checkBoomPos(player2.Pos.right)) break;
-                        targetPos2 = player2.Pos.right;
-                        player2.facing = 3;
-                        Move2();
-                        	
-                        
-                    }
+                    ismovingdown1 = false;
                 }
-            default:
-                break;
-        } 
+        
+                if(event.getCode() == KeyCode.A)
+                {
+                    ismovingleft1 = false;
+                }
+                
+                if(event.getCode() == KeyCode.D)
+                {
+                    ismovingright1 = false;
+                }
+				
+                if(event.getCode() == KeyCode.UP)
+                {
+                    
+                    ismovingup2 = false;
+                }
+        
+                if(event.getCode() == KeyCode.DOWN)
+                {
+                    
+                    ismovingdown2 = false;
+                }
+        
+                if(event.getCode() == KeyCode.LEFT)
+                {
+                    
+                    ismovingleft2 = false;
+                }
+                
+                if(event.getCode() == KeyCode.RIGHT)
+                {
+                   
+                    ismovingright2 = false;
+                }
+			}
+            
+        });
+
     }
-
 
     public void update()
     {
-        if(isMoving1)
-        {
-            player1.setScreenX(player1.getScreenX() + moveX1);
-            player1.setScreenY(player1.getScreenY() + moveY1);
-            player1.setWorldX(player1.getWorldX() + moveX1);
-            player1.setWorldY(player1.getWorldY() + moveY1);
-            if(player1.getWorldX() == targetPos1.getWorldX() && player1.getWorldY() == targetPos1.getWorldY())
+        if(ismovingup1)
+        { 
+            if(player1.Pos.top != null)
             {
-                isMoving1 = false;  
-                player1.Pos = targetPos1;
-                Item item = level.itemCheck(targetPos1);
-                if(item != null)
+                if(level.playerTouchBlock(player1,player1.Pos.top))
                 {
-                    player1.playerPickItem(item); 
-                    gs.Audio(GameSound.ITEM);
-                    level.RemoveItem(item);
+
+                    if(level.distance(player1, player1.Pos.top) < level.distance(player1, player1.Pos))
+                    {
+                        player1.Pos = player1.Pos.top;
+                    }   
+                    player1.setScreenY(player1.getScreenY() - player1.getSpeed());
+                    player1.setWorldY(player1.getWorldY() - player1.getSpeed()); 
                 }
             }
-        }
-
-        if(isMoving2)
-        {
-            player2.setScreenX(player2.getScreenX() + moveX2);
-            player2.setScreenY(player2.getScreenY() + moveY2);
-            player2.setWorldX(player2.getWorldX() + moveX2);
-            player2.setWorldY(player2.getWorldY() + moveY2);
-            if(player2.getWorldX() == targetPos2.getWorldX() && player2.getWorldY() == targetPos2.getWorldY())
+            else
             {
-                isMoving2 = false;      
-                player2.Pos = targetPos2;
-                Item item = level.itemCheck(targetPos2);
-                if(item != null)
+                if(level.playerTouchMap(player1))
                 {
-                    player2.playerPickItem(item); 
-                    gs.Audio(GameSound.ITEM);
-                    level.RemoveItem(item);
+                    player1.setScreenY(player1.getScreenY() - player1.getSpeed());
+                    player1.setWorldY(player1.getWorldY() - player1.getSpeed()); 
                 }
             }
+            player1.facing = 0;
         }
-    }
-
-    public void Move1()
-    {
-        gs.Audio(GameSound.FOOT);
-        int dx = targetPos1.getWorldX() - player1.Pos.getWorldX();
-        int dy = targetPos1.getWorldY() - player1.Pos.getWorldY();
-        moveX1 = dx / player1.getSpeed();
-        moveY1 = dy / player1.getSpeed();
-        isMoving1 = true;  
+        else if(ismovingdown1)
+        {
+            if(player1.Pos.down != null)
+            {
+                if(level.playerTouchBlock(player1,player1.Pos.down))
+                {
+                   
+                    if(level.distance(player1, player1.Pos.down) + 20 < level.distance(player1, player1.Pos))
+                    {
+                        player1.Pos = player1.Pos.down;
+                    }    
+                    player1.setScreenY(player1.getScreenY() + player1.getSpeed());
+                    player1.setWorldY(player1.getWorldY() + player1.getSpeed()); 
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player1))
+                {
+                    player1.setScreenY(player1.getScreenY() + player1.getSpeed());
+                    player1.setWorldY(player1.getWorldY() + player1.getSpeed()); 
+                }
+            }
+            player1.facing = 1;
+        }
+        else if(ismovingleft1)
+        {
+            if(player1.Pos.left != null)
+            {
+                if(level.playerTouchBlock(player1,player1.Pos.left))
+                {
+                
+                    if(level.distance(player1, player1.Pos.left) < level.distance(player1, player1.Pos))
+                    {
+                        player1.Pos = player1.Pos.left;
+                    }    
+                    player1.setScreenX(player1.getScreenX() - player1.getSpeed());
+                    player1.setWorldX(player1.getWorldX() - player1.getSpeed()); 
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player1))
+                {
+                    player1.setScreenX(player1.getScreenX() - player1.getSpeed());
+                    player1.setWorldX(player1.getWorldX() - player1.getSpeed()); 
+                }
+            }
+            player1.facing = 2;
+        }
+        else if(ismovingright1)
+        {
+            if(player1.Pos.right != null)
+            {
+                if(level.playerTouchBlock(player1,player1.Pos.right))
+                {
+                
+                    if(level.distance(player1, player1.Pos.right) < level.distance(player1, player1.Pos))
+                    {
+                        player1.Pos = player1.Pos.right;
+                    }   
+                    player1.setScreenX(player1.getScreenX() + player1.getSpeed());
+                    player1.setWorldX(player1.getWorldX() + player1.getSpeed()); 
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player1))
+                {
+                    player1.setScreenX(player1.getScreenX() + player1.getSpeed());
+                    player1.setWorldX(player1.getWorldX() + player1.getSpeed()); 
+                }
+            }
+            player1.facing = 3;
+        }
         
-    }
 
-    public void Move2()
-    {
-        gs.Audio(GameSound.FOOT);
-        int dx = targetPos2.getWorldX() - player2.Pos.getWorldX();
-        int dy = targetPos2.getWorldY() - player2.Pos.getWorldY();
-        moveX2 = dx / player2.getSpeed();
-        moveY2 = dy / player2.getSpeed();
-        isMoving2 = true;  
-        
+
+        if(ismovingup2)
+        {
+            if(player2.Pos.top != null)
+            {
+                if(level.playerTouchBlock(player2,player2.Pos.top))
+                {
+
+                    if(level.distance(player2, player2.Pos.top) < level.distance(player2, player2.Pos))
+                    {
+                        player2.Pos = player2.Pos.top;
+                    }   
+                    player2.setScreenY(player2.getScreenY() - player2.getSpeed());
+                    player2.setWorldY(player2.getWorldY() - player2.getSpeed());
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player2))
+                {
+                    player2.setScreenY(player2.getScreenY() - player2.getSpeed());
+                    player2.setWorldY(player2.getWorldY() - player2.getSpeed());
+                }
+            }     
+            player2.facing = 0;
+        }
+        else if(ismovingdown2)
+        {
+            if(player2.Pos.down != null)
+            {
+                if(level.playerTouchBlock(player2,player2.Pos.down))
+                {
+                   
+                    if(level.distance(player2, player2.Pos.down) + 20 < level.distance(player2, player2.Pos))
+                    {
+                        player2.Pos = player2.Pos.down;
+                    }    
+                    player2.setScreenY(player2.getScreenY() + player2.getSpeed());
+                    player2.setWorldY(player2.getWorldY() + player2.getSpeed());  
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player2))
+                {
+                    player2.setScreenY(player2.getScreenY() + player2.getSpeed());
+                    player2.setWorldY(player2.getWorldY() + player2.getSpeed());  
+                }
+            }
+            player2.facing = 1;
+        }
+        else if(ismovingleft2)
+        {
+            if(player2.Pos.left != null)
+            {
+                if(level.playerTouchBlock(player2,player2.Pos.left))
+                {
+                
+                    if(level.distance(player2, player2.Pos.left) < level.distance(player2, player2.Pos))
+                    {
+                        player2.Pos = player2.Pos.left;
+                    }    
+                    player2.setScreenX(player2.getScreenX() - player2.getSpeed());
+                    player2.setWorldX(player2.getWorldX() - player2.getSpeed()); 
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player2))
+                {
+                    player2.setScreenX(player2.getScreenX() - player2.getSpeed());
+                    player2.setWorldX(player2.getWorldX() - player2.getSpeed()); 
+                }
+            }
+            player2.facing = 2;
+        }
+        else if(ismovingright2)
+        {
+            if(player2.Pos.right != null)
+            {
+                if(level.playerTouchBlock(player2,player2.Pos.right))
+                {
+                
+                    if(level.distance(player2, player2.Pos.right) < level.distance(player2, player2.Pos))
+                    {
+                        player2.Pos = player2.Pos.right;
+                    }   
+                    player2.setScreenX(player2.getScreenX() + player2.getSpeed());
+                    player2.setWorldX(player2.getWorldX() + player2.getSpeed()); 
+                }
+            }
+            else
+            {
+                if(level.playerTouchMap(player2))
+                {
+                    player2.setScreenX(player2.getScreenX() + player2.getSpeed());
+                    player2.setWorldX(player2.getWorldX() + player2.getSpeed()); 
+                }
+            }
+            player2.facing = 3;
+        }
     }
 }

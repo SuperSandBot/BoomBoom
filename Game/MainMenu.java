@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -15,14 +14,14 @@ public class MainMenu extends Parent{
     Scene scene;
     GameHandler gameHandler;
     GameMain gameMain;
-    Pane tutorio;
 
     int screenWidth;
-    int screenHight;
+    int screenHeight;
 
     Button playBtn;
     Button tutorialBtn;
     Button quitBtn;
+    Button exitTutorialBtn;
 
     FadeTransition fadeScreenOut;
     FadeTransition fadeScreenIn;
@@ -31,7 +30,11 @@ public class MainMenu extends Parent{
     ImageView backGround;
     ImageView btnPlayImage;
     ImageView btnTutorialImage;
+    ImageView tutorialImage;
     ImageView btnQuitImage;
+    ImageView btnExitTutorial;
+    ImageView btnExitImage;
+    
 
     public MainMenu()
     {
@@ -42,9 +45,12 @@ public class MainMenu extends Parent{
     {
         LoadingScreen = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/loadingscreen.png")));
         backGround = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/GameMain.png")));
+
         btnPlayImage = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/Play_btn.png")));
         btnTutorialImage = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/tutorial_btn.png")));
         btnQuitImage = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/quit_btn.png")));
+        btnExitImage = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/x_btn.png")));
+        tutorialImage = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/tutorial_sheet1.png")));
 
         playBtn = new Button("",btnPlayImage);
         playBtn.setOnMouseClicked(e -> playButtonClicked());
@@ -52,6 +58,16 @@ public class MainMenu extends Parent{
         tutorialBtn.setOnMouseClicked(e -> tutorialButtonClicked());
         quitBtn = new Button("",btnQuitImage);
         quitBtn.setOnMouseClicked(e -> quitButtonClicked());
+        exitTutorialBtn = new Button("",btnExitImage);
+        exitTutorialBtn.setOnMouseClicked(e -> exitTutorial());
+
+        tutorialImage.setLayoutX(5);
+        tutorialImage.setLayoutY(0);
+        tutorialImage.setVisible(false);
+
+        exitTutorialBtn.setLayoutX(900);
+        exitTutorialBtn.setLayoutY(20);
+        exitTutorialBtn.setVisible(false);
 
         playBtn.setLayoutX(64);
         playBtn.setLayoutY(200);
@@ -59,15 +75,16 @@ public class MainMenu extends Parent{
         tutorialBtn.setLayoutX(64);
         tutorialBtn.setLayoutY(320);
 
-        quitBtn.setLayoutX(128);
+        quitBtn.setLayoutX(110);
         quitBtn.setLayoutY(440);
 
         this.getChildren().add(backGround);
         this.getChildren().add(playBtn);
         this.getChildren().add(tutorialBtn);
         this.getChildren().add(quitBtn);
+        this.getChildren().add(tutorialImage);
+        this.getChildren().add(exitTutorialBtn);
         this.getChildren().add(LoadingScreen);
-
 
         fadeScreenOut = new FadeTransition();
         fadeScreenOut.setNode(LoadingScreen);
@@ -91,10 +108,9 @@ public class MainMenu extends Parent{
         {
             gameHandler = new GameHandler();
             gameHandler.setup();
+            gameHandler.gameMain = gameMain;
             gameMain.gameStage.setScene(gameHandler.scene);
         });
-
-
     }
 
     private void playButtonClicked()
@@ -104,11 +120,18 @@ public class MainMenu extends Parent{
 
     private void tutorialButtonClicked()
     {
-
+        exitTutorialBtn.setVisible(true);
+        tutorialImage.setVisible(true);
     }
 
     private void quitButtonClicked()
     {
         gameMain.gameStage.close();
+    }
+
+    private void exitTutorial()
+    {
+        tutorialImage.setVisible(false);
+        exitTutorialBtn.setVisible(false);
     }
 }

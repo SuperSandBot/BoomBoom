@@ -33,6 +33,7 @@ public class GameHandler extends Parent implements Runnable {
 
     Scene scene;
     Level level;
+    GameMain gameMain;
 
     boolean running = false;
     GraphicsContext gp;
@@ -47,8 +48,10 @@ public class GameHandler extends Parent implements Runnable {
     boolean GameStartAnimation;
     boolean GameOverAnimation;
     boolean TimerAnimation;
+    boolean putScore;
 
     ImageView LoadingScreen;
+    ImageView blackScreen;
     ImageView imageGS;
     ImageView imageGO;
     ImageView player1score;
@@ -57,9 +60,11 @@ public class GameHandler extends Parent implements Runnable {
     ImageView scorePanel;
     ImageView btnimage;
     ImageView btnimagemainmenu;
+    ImageView btnImageContinue;
 
     Button btnRetry;
     Button btnmainmenu;
+    Button btnContinue;
 
     FadeTransition fadeScreenOut;
     FadeTransition fadeScreenIn;
@@ -68,14 +73,16 @@ public class GameHandler extends Parent implements Runnable {
     FadeTransition fadebtn;
 
     ArrayList<Player> playerList;
+    ImageManeger imageManeger;
     int i;
 
     public GameHandler()
     {
         //set up canvas side
-        scene = new Scene(this,Color.BLACK);
+        scene = new Scene(this,Color.LIGHTSKYBLUE);
         canvas = new Canvas(screenWidth,screenHight);
         textcanvas = new Canvas(screenWidth,screenHight);
+       
     }
 
     public void setup()
@@ -89,11 +96,16 @@ public class GameHandler extends Parent implements Runnable {
         player2score = new ImageView( new Image(getClass().getResourceAsStream("/Game/Asset/UI/player2score.png")));
         btnimage = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/retry_button.png")));
         btnimagemainmenu = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/mainmenu_btn.png")));
+        btnImageContinue = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/continue_btn.png")));
+        blackScreen = new ImageView(new Image(getClass().getResourceAsStream("/Game/Asset/UI/black_sceen.png")));
+
 
         btnRetry = new Button("",btnimage);
         btnRetry.setOnMouseClicked(e -> RestartGame());
         btnmainmenu = new Button("",btnimagemainmenu);
         btnmainmenu.setOnMouseClicked(e -> BackToMain());
+        btnContinue = new Button("",btnImageContinue);
+        btnContinue.setOnMouseClicked(e -> onBtnContinueClicked());
 
         //layer
         this.getChildren().add(canvas);
@@ -103,15 +115,19 @@ public class GameHandler extends Parent implements Runnable {
         this.getChildren().add(imageUI);
         this.getChildren().add(player1score);
         this.getChildren().add(player2score);
+        this.getChildren().add(blackScreen);
         this.getChildren().add(textcanvas);
         this.getChildren().add(btnRetry);
         this.getChildren().add(btnmainmenu);
+        this.getChildren().add(btnContinue);
         this.getChildren().add(LoadingScreen);
+
+        imageManeger = new ImageManeger();
 
         fadeScreenOut = new FadeTransition();
         fadeScreenOut.setNode(LoadingScreen);
         fadeScreenOut.setDuration(Duration.seconds(2));
-        fadeScreenOut.setDelay(Duration.seconds(2));
+        fadeScreenOut.setDelay(Duration.seconds(1));
         fadeScreenOut.setFromValue(1);
         fadeScreenOut.setToValue(0);
         fadeScreenOut.setOnFinished(p ->
@@ -176,6 +192,28 @@ public class GameHandler extends Parent implements Runnable {
         if(GameStartAnimation) GameStartAnimation();  
         if(TimerAnimation) TimerAnimation();
 
+        if(putScore == true)
+        {
+            if(playerList.get(0).score > playerList.get(1).score)
+            {
+                gptext.setFont(Font.font(60));
+                gptext.strokeText("Player1 WIN" , screenWidth/2 - 145, screenHight/2+10);
+                gptext.fillText("Player1 WIN" , screenWidth/2 - 145, screenHight/2+10);
+            }
+            else if(playerList.get(0).score < playerList.get(1).score)
+            {
+                gptext.setFont(Font.font(60));
+                gptext.strokeText("Player2 WIN" , screenWidth/2 - 145, screenHight/2+10);
+                gptext.fillText("Player2 WIN" , screenWidth/2 - 145, screenHight/2+10);
+            }
+            else
+            {
+                gptext.setFont(Font.font(70));
+                gptext.strokeText("DRAW" , screenWidth/2 - 90, screenHight/2 +10);
+                gptext.fillText("DRAW" , screenWidth/2 - 90, screenHight/2 +10);
+            }
+        }
+
     }
 
     private void GameScore()
@@ -230,7 +268,7 @@ public class GameHandler extends Parent implements Runnable {
             transition.setDuration(Duration.millis(500));
             transition.setInterpolator(Interpolator.LINEAR);
             transition.setFromX(0);
-            transition.setToY(-700);
+            transition.setToY(-500);
             transition.setOnFinished(a ->
             {  
                 btnRetry.setVisible(true); 
@@ -249,6 +287,8 @@ public class GameHandler extends Parent implements Runnable {
                 fadebtn.setFromValue(0);
                 fadebtn.setToValue(1);
                 fadebtn.play();
+                putScore = true;
+
             });
             transition.play();
         });
@@ -273,15 +313,20 @@ public class GameHandler extends Parent implements Runnable {
 
     private void Tic()
     {
-        if(Timer == 0)
+        if(gamerunning)
         {
-            EndGame();
-            Timer = -1;
+            if(Timer == 0)
+            {
+                EndGame();
+                Timer = -1;
+            }
         }
-
-        if(TimerAnimation) Timer--;
-
-        if(gamerunning) level.Tic();
+        
+        if(gamerunning)
+        {
+            if(TimerAnimation) Timer--;
+            level.Tic();
+        } 
 
         if(GameStartAnimation)
         {
@@ -295,16 +340,7 @@ public class GameHandler extends Parent implements Runnable {
             }
             i--;
         }
-        
-        if(GameOverAnimation)
-        {
-            if(i==0)
-            {
 
-            }
-            i--;
-        }
-        
     }
 
     private void RestartGame()
@@ -316,7 +352,12 @@ public class GameHandler extends Parent implements Runnable {
 
     private void BackToMain()
     {
-
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.setup();
+        mainMenu.gameMain = gameMain;
+        mainMenu.screenWidth = this.screenWidth;
+        mainMenu.screenHeight = this.screenHight;
+        gameMain.gameStage.setScene(mainMenu.scene);
     }
 
     private void EndGame()
@@ -344,6 +385,7 @@ public class GameHandler extends Parent implements Runnable {
         GameStartAnimation = false;
         GameOverAnimation = false;
         TimerAnimation = false;
+        putScore = false;
 
         imageGS.setVisible(false);
         imageGO.setVisible(false);
@@ -353,6 +395,8 @@ public class GameHandler extends Parent implements Runnable {
         player2score.setVisible(false);
         btnRetry.setVisible(false);
         btnmainmenu.setVisible(false);
+        btnContinue.setVisible(false);
+        blackScreen.setVisible(false);
         //set up level
         Map map = new Map();
         map.setScreenX(96);
@@ -366,10 +410,10 @@ public class GameHandler extends Parent implements Runnable {
         level.setupLevel();
 
         //setup controler
-        controlHandler = new ControlHandler();
+        controlHandler = new ControlHandler(scene);
         controlHandler.player1 = level.playerlist.get(0);
         controlHandler.player2 = level.playerlist.get(1);
-        scene.setOnKeyPressed(controlHandler);
+        controlHandler.gameHandler = this;
         controlHandler.level = level;
         controlHandler.control = false;
     /////////////////////////
@@ -404,14 +448,47 @@ public class GameHandler extends Parent implements Runnable {
         btnmainmenu.setContentDisplay(ContentDisplay.CENTER);
         btnmainmenu.setPrefWidth(btnimagemainmenu.getImage().getWidth());
         btnmainmenu.setPrefHeight(btnimagemainmenu.getImage().getHeight());
+
+        btnContinue.setLayoutX(screenWidth/2 - btnImageContinue.getImage().getWidth()/2);
+        btnContinue.setLayoutY(screenHight/2);
+
+        blackScreen.setLayoutX(0);
+        blackScreen.setLayoutY(0);
     //////////////////////////////////////
         level.update();
         level.draw(gp); 
 
-        Timer = 2;
+        Timer = 180;
         fadeScreenOut.play();
         GameStartAnimation = true;
 
         
+    }
+
+    public void pauseGame(boolean p)
+    {
+        if(p)
+        {
+            gamerunning = false;
+            blackScreen.setVisible(true);
+            btnContinue.setVisible(true);
+            btnmainmenu.setVisible(true);
+        }
+        else
+        {
+            gamerunning = true;
+            blackScreen.setVisible(false);
+            btnContinue.setVisible(false);
+            btnmainmenu.setVisible(false);
+        }
+    }
+
+    private void onBtnContinueClicked()
+    {
+        controlHandler.gamepause = false;
+        gamerunning = true;
+        blackScreen.setVisible(false);
+        btnContinue.setVisible(false);
+        btnmainmenu.setVisible(false);
     }
 }
