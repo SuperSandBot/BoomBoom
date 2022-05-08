@@ -211,7 +211,7 @@ public class ControlHandler{
                 if(level.playerTouchBlock(player1,player1.Pos.down))
                 {
                    
-                    if(level.distance(player1, player1.Pos.down) + 20 < level.distance(player1, player1.Pos))
+                    if(level.distance(player1, player1.Pos.down) < level.distance(player1, player1.Pos))
                     {
                         player1.Pos = player1.Pos.down;
                     }    
@@ -314,7 +314,7 @@ public class ControlHandler{
                 if(level.playerTouchBlock(player2,player2.Pos.down))
                 {
                    
-                    if(level.distance(player2, player2.Pos.down) + 20 < level.distance(player2, player2.Pos))
+                    if(level.distance(player2, player2.Pos.down) < level.distance(player2, player2.Pos))
                     {
                         player2.Pos = player2.Pos.down;
                     }    

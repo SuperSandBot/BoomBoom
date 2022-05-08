@@ -9,5 +9,6 @@
         "JAVAFX/lib/javafx.swing.jar",
         "JAVAFX/lib/javafx.web.jar",
         "JAVAFX/lib/javafx-swt.jar"
-    ]
+    ],
+    "maven.view": "flat"
 }

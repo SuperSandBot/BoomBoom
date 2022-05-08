@@ -152,11 +152,11 @@ public class GameHandler extends Parent implements Runnable {
 
         new Thread(this).start();
 
-        BackGroundExacutor.Scheduler.scheduleAtFixedRate(new Runnable() {
+        BackGroundExacutor.Scheduler.scheduleWithFixedDelay(new Runnable() {
 
             @Override
             public void run() {
-                 Tic();     
+                Tic();     
             }
          
         }, 0, 1, TimeUnit.SECONDS);   
