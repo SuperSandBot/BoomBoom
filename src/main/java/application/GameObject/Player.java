@@ -176,7 +176,7 @@ public class Player extends Object
             case BOOT:
                 bootlevel--;
                 break;
-            case VILE:
+            case POTION:
                 powerlevel--;
                 break;
             default:
@@ -202,7 +202,7 @@ public class Player extends Object
             case BOOT:
                 bootlevel++;
                 break;
-            case VILE:
+            case POTION:
                 powerlevel++;
                 break;
             default:

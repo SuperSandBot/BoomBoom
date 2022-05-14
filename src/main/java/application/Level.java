@@ -382,7 +382,7 @@ public class Level extends Object{
                     return itemTypes.BOOT;
                 case 6:
                 case 7:
-                    return itemTypes.VILE;
+                    return itemTypes.POTION;
                 default:
                     break;
             }

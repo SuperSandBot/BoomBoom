@@ -10,7 +10,7 @@ public class Item extends Object{
         GOLDCOIN,
         BOOMUPGRADE,
         BOOT,
-        VILE;
+        POTION;
     }
 
     public Image itemImage;

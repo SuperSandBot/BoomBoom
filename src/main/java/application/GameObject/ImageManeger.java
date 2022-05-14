@@ -65,7 +65,7 @@ public class ImageManeger {
                    return boomupgrade;
                 case BOOT:
                     return boot;
-                case VILE:
+                case POTION:
                     return vile;
                 default:   
                     return null;
